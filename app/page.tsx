@@ -171,7 +171,7 @@ export default function HubPage() {
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
 
       <a
-        href={`${process.env.NEXT_PUBLIC_DAILY_CHALLENGE_URL ?? 'http://localhost:3001'}/admin.html`}
+        href="https://daily-skate-challenge-beta-production.up.railway.app/admin.html"
         style={{
           marginTop: 48,
           fontSize: 12,
