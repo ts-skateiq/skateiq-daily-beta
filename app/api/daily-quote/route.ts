@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const GAME_URL = process.env.NEXT_PUBLIC_DAILY_CHALLENGE_URL ?? 'http://localhost:3001'
+const GAME_URL = 'https://daily-skate-challenge-beta-production.up.railway.app'
 
 export async function GET() {
   try {

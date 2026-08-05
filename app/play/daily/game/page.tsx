@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import GameToolbar from '@/components/GameToolbar'
 import AuthModal from '@/components/AuthModal'
 
-const DAILY_URL = process.env.NEXT_PUBLIC_DAILY_CHALLENGE_URL ?? 'http://localhost:3001'
+const DAILY_URL = 'https://daily-skate-challenge-beta-production.up.railway.app'
 
 const howToPlay = (
   <div style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.6 }}>
