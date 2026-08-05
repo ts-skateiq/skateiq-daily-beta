@@ -121,10 +121,9 @@ export default function HubPage() {
                 <div style={{ fontSize: 14, color: 'var(--text)' }}>{g.desc}</div>
               </div>
               <div style={{
-                fontSize: 18,
+                fontSize: 36,
                 color: status === 'won' ? g.accent : status === 'lost' ? '#CB8D82' : '#4a4a4a',
                 fontWeight: 600,
-                fontSize: 36,
               }}>
                 {status === 'won' ? '✓' : status === 'lost' ? '✗' : '›'}
               </div>
