@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
 import AuthModal from './AuthModal'
-import { X, Lightbulb, BarChart2, HelpCircle, Settings } from 'lucide-react'
+import { X, Lightbulb, BarChart2, HelpCircle } from 'lucide-react'
 
 interface GameToolbarProps {
   gameName: string
@@ -84,9 +84,6 @@ export default function GameToolbar({
           </button>
         )}
 
-        <button aria-label="Settings" style={iconBtn}>
-          <Settings size={18} />
-        </button>
 
         {/* Spacer */}
         <div style={{ flex: 1 }} />
