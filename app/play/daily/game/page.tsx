@@ -15,9 +15,8 @@ export default function DailyGamePage() {
   const howToPlay = (
     <div style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.6 }}>
       <ul style={{ paddingLeft: 18, margin: 0 }}>
-        <li style={{ marginBottom: 8 }}>Same skills for everyone, no matter your level.</li>
-        <li style={{ marginBottom: 8 }}>Unlimited attempts. Try each trick as many times as you like.</li>
-        <li style={{ marginBottom: 8 }}>Keep your own score. This is on the honor system.</li>
+        <li style={{ marginBottom: 8 }}><strong>Unlimited attempts.</strong> Try each trick as many times as you like.</li>
+        <li style={{ marginBottom: 8 }}><strong>Keep your own score.</strong> This is on the honor system.</li>
         <li>A new challenge is released daily at midnight UTC.</li>
       </ul>
       {!user && (
