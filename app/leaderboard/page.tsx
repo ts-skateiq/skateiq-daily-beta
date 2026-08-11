@@ -12,6 +12,14 @@ interface Entry {
   created_at: string
 }
 
+const MOCK_ENTRIES: Entry[] = [
+  { user_id: 'mock-1', makes: 3, total: 3, username: 'rileyk',   created_at: '' },
+  { user_id: 'mock-2', makes: 3, total: 3, username: 'jakemoss', created_at: '' },
+  { user_id: 'mock-3', makes: 2, total: 3, username: 'carsonb', created_at: '' },
+  { user_id: 'mock-4', makes: 2, total: 3, username: 'taylors', created_at: '' },
+  { user_id: 'mock-5', makes: 1, total: 3, username: 'devonm',  created_at: '' },
+]
+
 function getMedalEmoji(makes: number, total: number): string | null {
   if (makes === total) return '🥇'
   if (makes === 0) return total === 1 ? '🥉' : null
@@ -62,6 +70,7 @@ export default function LeaderboardPage() {
   }, [date])
 
   const myUsername = user?.email?.split('@')[0].toLowerCase() ?? null
+  const displayEntries = entries.length > 0 ? entries : MOCK_ENTRIES
 
   return (
     <div style={{
@@ -114,12 +123,8 @@ export default function LeaderboardPage() {
       <div style={{ width: '100%', maxWidth: 480, padding: '0 16px', marginTop: 8 }}>
         {loading ? (
           <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 48, fontSize: 14 }}>Loading…</div>
-        ) : entries.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 48, fontSize: 14 }}>
-            No scores yet for this day.
-          </div>
         ) : (
-          entries.map((entry, i) => {
+          displayEntries.map((entry, i) => {
             const rank = i + 1
             const isFirst = rank === 1
             const isMe = entry.username === myUsername
