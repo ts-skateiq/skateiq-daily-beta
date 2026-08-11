@@ -112,7 +112,7 @@ export default function HubPage() {
             >
               <div style={{ textAlign: 'center' }}>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 18,
                   fontWeight: 800,
                   letterSpacing: '0.14em',
                   color: g.accent,
