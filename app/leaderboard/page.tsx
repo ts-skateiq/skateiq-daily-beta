@@ -169,8 +169,8 @@ export default function LeaderboardPage() {
                 </div>
 
                 {/* Medal */}
-                <div style={{ fontSize: 22, marginLeft: 8 }}>
-                  {medal ?? <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{entry.makes}/{entry.total}</span>}
+                <div style={{ fontSize: 22, marginLeft: 8, width: 28, textAlign: 'center' }}>
+                  {medal ?? ''}
                 </div>
               </div>
             )
