@@ -5,7 +5,7 @@ import GameToolbar from '@/components/GameToolbar'
 import AuthModal from '@/components/AuthModal'
 import { useAuth } from '@/lib/auth-context'
 
-const DAILY_URL = 'https://daily-skate-challenge-beta-production.up.railway.app'
+const DAILY_URL = ''
 
 export default function DailyGamePage() {
   const [height, setHeight] = useState('100vh')
@@ -69,7 +69,7 @@ export default function DailyGamePage() {
     <div className="flex flex-col w-full">
       <GameToolbar gameName="Daily Challenge" howToPlay={howToPlay} />
       <iframe
-        src={`${DAILY_URL}?view=round`}
+        src="/game.html?view=round"
         style={{ width: '100%', height, border: 'none', display: 'block' }}
         title="Daily Challenge"
         allow="accelerometer; autoplay; clipboard-write"

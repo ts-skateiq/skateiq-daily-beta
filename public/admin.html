@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKATE IQ — Daily Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0e0d;
+      --surface: #161816;
+      --border: #2a2c2a;
+      --text: #f0f0ee;
+      --muted: #6b6e6b;
+      --accent: #71A88A;
+      --accent-dim: rgba(113,168,138,0.12);
+      --danger: #e05c4b;
+      --radius: 10px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Login ── */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 36px 32px;
+    }
+
+    .login-card .wordmark {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .login-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
+      background: #1e201e;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input[type="email"]::placeholder,
+    input[type="password"]::placeholder,
+    input[type="text"]::placeholder,
+    input[type="url"]::placeholder { color: var(--muted); }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="text"]:focus,
+    input[type="url"]:focus { border-color: var(--accent); }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: #0d0e0d;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .login-error {
+      font-size: 13px;
+      color: var(--danger);
+      margin-top: 12px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    /* ── Admin ── */
+    #admin-screen {
+      display: none;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      max-width: 740px;
+      margin: 0 auto 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .wordmark {
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-logout {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 7px 14px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    .container { max-width: 740px; margin: 0 auto; }
+
+    .week-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .week-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .week-date {
+      font-size: 15px;
+      color: #71A88A;
+      font-weight: 700;
+    }
+
+    .trick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .trick-row:last-child { margin-bottom: 0; }
+
+    .trick-remove {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0 4px;
+      line-height: 1;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .trick-remove:hover { color: var(--danger); }
+
+    .trick-header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .btn-add-trick {
+      background: none;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 16px;
+      width: 100%;
+      margin-top: 12px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-add-trick:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-add-trick:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .trick-num {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      grid-column: 1 / -1;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .url-wrap { position: relative; }
+
+    .url-wrap input { padding-left: 36px; }
+
+    .url-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .actions {
+      max-width: 740px;
+      margin: 28px auto 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-save {
+      background: var(--accent);
+      color: #0d0e0d;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 28px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s;
+    }
+
+    .btn-save:hover { opacity: 0.88; }
+    .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .status {
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .status.show { opacity: 1; }
+    .status.ok { color: var(--accent); }
+    .status.err { color: var(--danger); }
+
+    .tab-bar {
+      max-width: 740px;
+      margin: 0 auto 32px;
+      display: flex;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 16px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #0d0e0d;
+    }
+
+    .month-bar {
+      max-width: 740px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .month-bar label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .month-bar select {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2371A88A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .month-bar select:focus { outline: none; border-color: var(--accent); }
+
+    .month-nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .month-nav button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      line-height: 1;
+    }
+
+    .month-nav button:hover { border-color: var(--accent); color: var(--accent); }
+
+    .quotes-form { max-width: 740px; margin: 0 auto; }
+
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .quote-num {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 540px) {
+      .trick-row { grid-template-columns: 1fr; }
+      .quote-card { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <span class="wordmark">Skate IQ</span>
+    <h1>Admin Login</h1>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@skateiq.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="login()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+    <a href="https://skateiq-daily-beta-production.up.railway.app" style="display:block;text-align:center;margin-top:20px;font-size:13px;color:var(--muted);text-decoration:none;">← Back to app</a>
+  </div>
+</div>
+
+<!-- Admin -->
+<div id="admin-screen">
+  <header>
+    <span class="wordmark">SKATE IQ</span>
+    <h1>Daily Schedule Admin</h1>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="https://skateiq-daily-beta-production.up.railway.app" class="btn-logout" style="text-decoration:none">← App</a>
+      <button class="btn-logout" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-schedule" onclick="switchTab('schedule')">Schedule</button>
+    <button class="tab-btn" id="tab-quotes" onclick="switchTab('quotes')">Quotes</button>
+  </div>
+
+  <div id="panel-schedule">
+  <div class="month-bar">
+    <label>Month</label>
+    <select id="month-select" onchange="onMonthChange()"></select>
+    <div class="month-nav">
+      <button onclick="stepMonth(-1)">‹</button>
+      <button onclick="stepMonth(1)">›</button>
+    </div>
+  </div>
+
+  <div class="container" id="schedule-form"></div>
+
+  <div class="actions">
+    <button class="btn-save" id="save-btn" onclick="save()">Save Schedule</button>
+    <span class="status" id="status"></span>
+  </div>
+  </div>
+
+  <div id="panel-quotes" style="display:none">
+    <div class="quotes-form" id="quotes-form"></div>
+    <div class="actions">
+      <button class="btn-save" id="save-quotes-btn" onclick="saveQuotes()">Save Quotes</button>
+      <span class="status" id="quotes-status"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+let schedule = [];
+let selectedMonth = '';
+let token = localStorage.getItem('admin_token');
+
+function fmtDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+  });
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function buildMonthFilter() {
+  const months = [...new Set(schedule.map(d => d.start.slice(0, 7)))].sort();
+  const sel = document.getElementById('month-select');
+  sel.innerHTML = months.map(m => {
+    const [y, mo] = m.split('-');
+    const label = new Date(+y, +mo - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return `<option value="${m}">${label}</option>`;
+  }).join('');
+  const now = new Date();
+  const curr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  sel.value = months.includes(curr) ? curr : months[0];
+  selectedMonth = sel.value;
+}
+
+function onMonthChange() {
+  selectedMonth = document.getElementById('month-select').value;
+  render();
+  window.scrollTo(0, 0);
+}
+
+function stepMonth(dir) {
+  const sel = document.getElementById('month-select');
+  const opts = Array.from(sel.options);
+  const idx = opts.findIndex(o => o.value === sel.value);
+  const next = idx + dir;
+  if (next >= 0 && next < opts.length) {
+    sel.value = opts[next].value;
+    onMonthChange();
+  }
+}
+
+function render() {
+  const el = document.getElementById('schedule-form');
+  const days = schedule
+    .map((day, i) => ({ day, i }))
+    .filter(({ day }) => day.start.slice(0, 7) === selectedMonth);
+
+  el.innerHTML = days.map(({ day, i }) => `
+    <div class="week-card">
+      <div class="week-header">
+        <span class="week-date">${fmtDate(day.start)}</span>
+      </div>
+      ${day.tricks.map((trick, ti) => `
+        <div class="trick-header">
+          <span class="trick-num" style="margin:0">Trick ${ti + 1}</span>
+          ${day.tricks.length > 1 ? `<button class="trick-remove" onclick="removeTrick(${i},${ti})" title="Remove">✕</button>` : ''}
+        </div>
+        <div class="trick-row">
+          <input type="text"
+            placeholder="Trick name"
+            value="${escHtml(trick.name)}"
+            oninput="schedule[${i}].tricks[${ti}].name = this.value"
+          >
+          <div class="url-wrap">
+            <span class="url-icon">▶</span>
+            <input type="url"
+              placeholder="YouTube URL (optional)"
+              value="${escHtml(trick.url)}"
+              oninput="schedule[${i}].tricks[${ti}].url = this.value"
+            >
+          </div>
+        </div>
+      `).join('')}
+      <button class="btn-add-trick" onclick="addTrick(${i})" ${day.tricks.length >= 5 ? 'disabled' : ''}>+ Add trick</button>
+    </div>
+  `).join('');
+}
+
+function addTrick(i) {
+  if (schedule[i].tricks.length >= 5) return;
+  schedule[i].tricks.push({ name: '', url: '' });
+  render();
+}
+
+function removeTrick(i, ti) {
+  if (schedule[i].tricks.length <= 1) return;
+  schedule[i].tricks.splice(ti, 1);
+  render();
+}
+
+async function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+
+  btn.disabled = true;
+  err.textContent = '';
+
+  try {
+    const res = await fetch('/api/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    token = data.token;
+    localStorage.setItem('admin_token', token);
+    showAdmin();
+  } catch (e) {
+    err.textContent = e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function logout() {
+  await fetch('/api/admin-logout', {
+    method: 'POST',
+    headers: { 'x-admin-token': token || '' }
+  });
+  token = null;
+  localStorage.removeItem('admin_token');
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-password').value = '';
+}
+
+async function showAdmin() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+  await Promise.all([load(), loadQuotes()]);
+}
+
+async function save() {
+  const btn = document.getElementById('save-btn');
+  const status = document.getElementById('status');
+  btn.disabled = true;
+  status.className = 'status';
+
+  try {
+    const res = await fetch('/api/schedule', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-token': token || ''
+      },
+      body: JSON.stringify(schedule)
+    });
+    if (res.status === 401) { logout(); return; }
+    if (!res.ok) throw new Error();
+    status.textContent = '✓ Saved';
+    status.className = 'status show ok';
+  } catch {
+    status.textContent = 'Save failed — is the server running?';
+    status.className = 'status show err';
+  } finally {
+    btn.disabled = false;
+    setTimeout(() => status.className = 'status', 3000);
+  }
+}
+
+async function load() {
+  try {
+    const res = await fetch('/api/schedule');
+    schedule = await res.json();
+    buildMonthFilter();
+    render();
+  } catch {
+    document.getElementById('schedule-form').innerHTML =
+      '<p style="color:#e05c4b;padding:20px">Could not load schedule — is the server running?</p>';
+  }
+}
+
+let quotes = [];
+
+function switchTab(tab) {
+  document.getElementById('panel-schedule').style.display = tab === 'schedule' ? 'block' : 'none';
+  document.getElementById('panel-quotes').style.display = tab === 'quotes' ? 'block' : 'none';
+  document.getElementById('tab-schedule').classList.toggle('active', tab === 'schedule');
+  document.getElementById('tab-quotes').classList.toggle('active', tab === 'quotes');
+}
+
+function renderQuotes() {
+  document.getElementById('quotes-form').innerHTML = quotes.map((q, i) => `
+    <div class="quote-card">
+      <div class="quote-num">Quote ${i + 1}</div>
+      <input type="text"
+        placeholder="Quote text…"
+        value="${escHtml(q.text)}"
+        oninput="quotes[${i}].text = this.value"
+        style="font-style:italic"
+      >
+      <input type="text"
+        placeholder="— Author"
+        value="${escHtml(q.author)}"
+        oninput="quotes[${i}].author = this.value"
+      >
+    </div>
+  `).join('');
+}
+
+async function loadQuotes() {
+  try {
+    const res = await fetch('/api/quotes');
+    quotes = await res.json();
+    renderQuotes();
+  } catch {
+    document.getElementById('quotes-form').innerHTML =
+      '<p style="color:#e05c4b;padding:20px">Could not load quotes.</p>';
+  }
+}
+
+async function saveQuotes() {
+  const btn = document.getElementById('save-quotes-btn');
+  const status = document.getElementById('quotes-status');
+  btn.disabled = true;
+  status.className = 'status';
+  try {
+    const res = await fetch('/api/quotes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token || '' },
+      body: JSON.stringify(quotes)
+    });
+    if (res.status === 401) { logout(); return; }
+    if (!res.ok) throw new Error();
+    status.textContent = '✓ Saved';
+    status.className = 'status show ok';
+  } catch {
+    status.textContent = 'Save failed';
+    status.className = 'status show err';
+  } finally {
+    btn.disabled = false;
+    setTimeout(() => status.className = 'status', 3000);
+  }
+}
+
+// Enter password with Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+    login();
+  }
+});
+
+// Check for existing session on load
+if (token) {
+  showAdmin();
+} else {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-screen').style.display = 'none';
+}
+</script>
+</body>
+</html>
