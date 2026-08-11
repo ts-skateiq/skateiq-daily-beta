@@ -51,13 +51,13 @@ export default function DailyLanding() {
 <div style={{ display: 'flex', gap: 10, width: '100%' }}>
         <Link
           href="/subscribe"
-          style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: `1.5px solid ${ACCENT}`, color: ACCENT, fontWeight: 600, fontSize: 14, padding: '12px 8px', borderRadius: 999, textDecoration: 'none' }}
+          style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1.5px solid #ffffff', color: '#ffffff', fontWeight: 600, fontSize: 14, padding: '12px 8px', borderRadius: 999, textDecoration: 'none' }}
         >
           Subscribe
         </Link>
         <Link
           href="/login"
-          style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: `1.5px solid ${ACCENT}`, color: ACCENT, fontWeight: 600, fontSize: 14, padding: '12px 8px', borderRadius: 999, textDecoration: 'none' }}
+          style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1.5px solid #ffffff', color: '#ffffff', fontWeight: 600, fontSize: 14, padding: '12px 8px', borderRadius: 999, textDecoration: 'none' }}
         >
           Log in
         </Link>
