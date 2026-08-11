@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
     const { data, error } = await supabase
       .from('daily_scores')
-      .select('user_id, makes, total, username, created_at')
+      .select('user_id, makes, total, username, streak, created_at')
       .eq('date', date)
       .order('makes', { ascending: false })
       .order('created_at', { ascending: true })
