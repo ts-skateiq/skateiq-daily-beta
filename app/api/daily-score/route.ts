@@ -44,8 +44,19 @@ export async function POST(req: NextRequest) {
     const username = (profile?.email ?? user.email ?? '').split('@')[0].toLowerCase()
     const today = new Date().toISOString().split('T')[0]
 
-    // Upsert score first so streak count includes today
-    await supabase.from('daily_scores').upsert({
+    // If already submitted today, return locked score
+    const { data: existing } = await supabase
+      .from('daily_scores')
+      .select('streak')
+      .eq('user_id', user.id)
+      .eq('date', today)
+      .single()
+
+    if (existing) {
+      return NextResponse.json({ ok: true, streak: existing.streak, locked: true })
+    }
+
+    await supabase.from('daily_scores').insert({
       user_id: user.id,
       date: today,
       makes,
@@ -53,7 +64,7 @@ export async function POST(req: NextRequest) {
       username,
       dots: dots ?? '',
       streak: 0,
-    }, { onConflict: 'user_id,date' })
+    })
 
     const streak = await computeStreak(supabase, user.id)
 
@@ -70,14 +81,37 @@ export async function POST(req: NextRequest) {
   }
 }
 
+function getMedalType(makes: number, total: number): 'gold' | 'silver' | 'bronze' | null {
+  if (makes === total) return 'gold'
+  if (makes === 0) return total === 1 ? 'bronze' : null
+  if (total === 2) return 'silver'
+  if (total === 3) return makes >= 2 ? 'silver' : 'bronze'
+  if (total === 4) return makes >= 3 ? 'silver' : 'bronze'
+  if (total === 5) return makes >= 3 ? 'silver' : 'bronze'
+  return makes / total >= 0.6 ? 'silver' : 'bronze'
+}
+
 export async function GET() {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ streak: 0 })
-    const streak = await computeStreak(supabase, user.id)
-    return NextResponse.json({ streak })
+    if (!user) return NextResponse.json({ streak: 0, gold: 0, silver: 0, bronze: 0 })
+
+    const [streak, { data: scores }] = await Promise.all([
+      computeStreak(supabase, user.id),
+      supabase.from('daily_scores').select('makes, total').eq('user_id', user.id),
+    ])
+
+    let gold = 0, silver = 0, bronze = 0
+    for (const s of scores ?? []) {
+      const m = getMedalType(s.makes, s.total)
+      if (m === 'gold') gold++
+      else if (m === 'silver') silver++
+      else if (m === 'bronze') bronze++
+    }
+
+    return NextResponse.json({ streak, gold, silver, bronze })
   } catch {
-    return NextResponse.json({ streak: 0 })
+    return NextResponse.json({ streak: 0, gold: 0, silver: 0, bronze: 0 })
   }
 }

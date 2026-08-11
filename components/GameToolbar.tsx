@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
 import AuthModal from './AuthModal'
@@ -27,6 +27,16 @@ export default function GameToolbar({
   const [showAuth, setShowAuth] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [showHowTo, setShowHowTo] = useState(false)
+  const [showStats, setShowStats] = useState(false)
+  const [stats, setStats] = useState<{ streak: number; gold: number; silver: number; bronze: number } | null>(null)
+
+  useEffect(() => {
+    if (!user) return
+    fetch('/api/daily-score')
+      .then(r => r.json())
+      .then(d => setStats({ streak: d.streak ?? 0, gold: d.gold ?? 0, silver: d.silver ?? 0, bronze: d.bronze ?? 0 }))
+      .catch(() => setStats({ streak: 0, gold: 0, silver: 0, bronze: 0 }))
+  }, [user])
 
   const iconBtn: React.CSSProperties = {
     background: 'none',
@@ -74,7 +84,7 @@ export default function GameToolbar({
           </button>
         )}
 
-        <button aria-label="Stats" style={iconBtn}>
+        <button aria-label="Stats" style={iconBtn} onClick={() => setShowStats(true)}>
           <BarChart2 size={18} />
         </button>
 
@@ -193,6 +203,54 @@ export default function GameToolbar({
       )}
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
+
+      {/* Stats popup */}
+      {showStats && (
+        <>
+          <div onClick={() => setShowStats(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 40 }} />
+          <div style={{
+            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 16,
+            padding: 24, width: 'min(280px, 90vw)', zIndex: 50,
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: '#71A88A' }}>STATS</h2>
+              <button onClick={() => setShowStats(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4 }}>
+                <X size={18} />
+              </button>
+            </div>
+            {!user ? (
+              <div style={{ marginTop: 4, paddingTop: 16, textAlign: 'center' }}>
+                <p style={{ margin: '0 0 10px', fontSize: 13, color: 'var(--text-muted)' }}>Create account to track your progress</p>
+                <button
+                  onClick={() => { setShowStats(false); setShowAuth(true) }}
+                  style={{ background: '#ffffff', color: '#0d0e0d', border: 'none', borderRadius: 999, padding: '10px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer', width: '100%' }}
+                >
+                  Sign in
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ textAlign: 'center', marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', letterSpacing: '0.08em', marginBottom: 4 }}>CURRENT STREAK</div>
+                  <div style={{ fontSize: 32, fontWeight: 700, color: '#4A8FD9' }}>🔥{stats?.streak ?? 0}</div>
+                </div>
+                <div style={{ borderTop: '1px solid var(--border)', marginBottom: 16 }} />
+                {[
+                  { emoji: '🥇', value: stats?.gold ?? 0, color: '#C9A84C' },
+                  { emoji: '🥈', value: stats?.silver ?? 0, color: '#A0A9B8' },
+                  { emoji: '🥉', value: stats?.bronze ?? 0, color: '#A0694A' },
+                ].map(({ emoji, value, color }) => (
+                  <div key={emoji} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                    <span style={{ fontSize: 22 }}>{emoji}</span>
+                    <span style={{ fontSize: 24, fontWeight: 700, color, minWidth: 32 }}>{value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }

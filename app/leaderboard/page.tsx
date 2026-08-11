@@ -32,12 +32,6 @@ function getMedalEmoji(makes: number, total: number): string | null {
   return makes / total >= 0.6 ? '🥈' : '🥉'
 }
 
-function ordinal(n: number): string {
-  const s = ['th', 'st', 'nd', 'rd']
-  const v = n % 100
-  return n + (s[(v - 20) % 10] || s[v] || s[0])
-}
-
 function formatDate(dateStr: string): string {
   const [year, month, day] = dateStr.split('-').map(Number)
   const d = new Date(year, month - 1, day)
@@ -121,8 +115,6 @@ export default function LeaderboardPage() {
       {/* List */}
       <div style={{ width: '100%', maxWidth: 480, padding: '0 16px', marginTop: 8 }}>
         {displayEntries.map((entry, i) => {
-            const rank = i + 1
-            const isFirst = rank === 1
             const isMe = entry.username === myUsername
             const medal = getMedalEmoji(entry.makes, entry.total)
 
