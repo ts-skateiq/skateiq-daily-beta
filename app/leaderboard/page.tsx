@@ -146,23 +146,22 @@ export default function LeaderboardPage() {
                 <div style={{
                   width: 52,
                   fontSize: 14,
-                  fontWeight: isFirst ? 800 : 500,
-                  color: isFirst ? '#C9A84C' : 'var(--text-muted)',
+                  fontWeight: 500,
+                  color: 'var(--text-muted)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 4,
                   flexShrink: 0,
                 }}>
                   {ordinal(rank)}
-                  {isFirst && <span style={{ fontSize: 14 }}>🏆</span>}
                 </div>
 
                 {/* Username */}
                 <div style={{
                   flex: 1,
                   fontSize: 15,
-                  fontWeight: isMe ? 700 : isFirst ? 700 : 500,
-                  color: isFirst ? '#C9A84C' : isMe ? '#71A88A' : 'var(--text)',
+                  fontWeight: isMe ? 700 : 500,
+                  color: isMe ? '#71A88A' : 'var(--text)',
                   fontFamily: 'monospace',
                   letterSpacing: '0.01em',
                   overflow: 'hidden',
