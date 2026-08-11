@@ -59,16 +59,13 @@ export default function LeaderboardPage() {
   const { user } = useAuth()
   const [date, setDate] = useState(todayUTC())
   const [entries, setEntries] = useState<Entry[]>([])
-  const [loading, setLoading] = useState(true)
   const today = todayUTC()
 
   useEffect(() => {
-    setLoading(true)
     fetch(`/api/leaderboard?date=${date}`)
       .then(r => r.json())
-      .then(d => setEntries(d.entries ?? []))
-      .catch(() => setEntries([]))
-      .finally(() => setLoading(false))
+      .then(d => { if (d.entries?.length > 0) setEntries(d.entries) })
+      .catch(() => {})
   }, [date])
 
   const myUsername = user?.email?.split('@')[0].toLowerCase() ?? null
@@ -108,7 +105,7 @@ export default function LeaderboardPage() {
               {formatDate(date)}
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-              {loading ? '—' : `${entries.length} player${entries.length !== 1 ? 's' : ''}`}
+              {`${displayEntries.length} player${displayEntries.length !== 1 ? 's' : ''}`}
             </div>
           </div>
           <button
@@ -123,10 +120,7 @@ export default function LeaderboardPage() {
 
       {/* List */}
       <div style={{ width: '100%', maxWidth: 480, padding: '0 16px', marginTop: 8 }}>
-        {loading ? (
-          <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 48, fontSize: 14 }}>Loading…</div>
-        ) : (
-          displayEntries.map((entry, i) => {
+        {displayEntries.map((entry, i) => {
             const rank = i + 1
             const isFirst = rank === 1
             const isMe = entry.username === myUsername
@@ -178,14 +172,14 @@ export default function LeaderboardPage() {
                   {entry.streak > 0 && (
                     <>
                       <span style={{ fontSize: 14 }}>🔥</span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)' }}>{entry.streak}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#4A8FD9' }}>{entry.streak}</span>
                     </>
                   )}
                 </div>
               </div>
             )
-          })
-        )}
+          })}
+
       </div>
 
       {!user && (
