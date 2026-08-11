@@ -22,8 +22,20 @@ export default function HubPage() {
   const [completion, setCompletion] = useState<Record<string, Status>>({})
   const [showAuth, setShowAuth] = useState(false)
   const [quote, setQuote] = useState<{ text: string; author: string } | null>(null)
+  const [streak, setStreak] = useState(0)
   const { user } = useAuth()
   const today = todayUTC()
+
+  useEffect(() => {
+    if (user) {
+      fetch('/api/daily-score')
+        .then(r => r.json())
+        .then(d => setStreak(d.streak ?? 0))
+        .catch(() => {})
+    } else {
+      setStreak(0)
+    }
+  }, [user])
 
   useEffect(() => {
     fetch('/api/daily-quote')
@@ -133,6 +145,20 @@ export default function HubPage() {
           )
         })}
       </div>
+
+      {user && streak > 0 && (
+        <div style={{
+          marginTop: 16,
+          fontSize: 13,
+          color: 'var(--text-muted)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+        }}>
+          <span style={{ fontSize: 16 }}>🔥</span>
+          <span><strong style={{ color: 'var(--text)' }}>{streak}</strong> day streak</span>
+        </div>
+      )}
 
       {!user && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginTop: 36, width: '100%', maxWidth: 360 }}>

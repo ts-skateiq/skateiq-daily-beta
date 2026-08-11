@@ -53,10 +53,17 @@ export default function DailyGamePage() {
   useEffect(() => {
     const handler = (e: MessageEvent) => {
       if (e.data === 'open-auth') setShowAuth(true)
+      if (e.data?.type === 'daily-complete' && user) {
+        fetch('/api/daily-score', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ makes: e.data.makes, total: e.data.total }),
+        }).catch(() => {})
+      }
     }
     window.addEventListener('message', handler)
     return () => window.removeEventListener('message', handler)
-  }, [])
+  }, [user])
 
   return (
     <div className="flex flex-col w-full">
