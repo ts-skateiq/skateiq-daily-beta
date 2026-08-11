@@ -55,7 +55,7 @@ export default function HubPage() {
       {/* Headline */}
       <h1 style={{
         fontFamily: 'var(--font-alumni), sans-serif',
-        fontSize: 'clamp(24px, 8vw, 68px)',
+        fontSize: 'clamp(24px, 8vw, 85px)',
         whiteSpace: 'nowrap',
         fontWeight: 700,
         lineHeight: 0.9,
