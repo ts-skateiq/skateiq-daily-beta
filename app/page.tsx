@@ -9,7 +9,7 @@ import AuthModal from '@/components/AuthModal'
 const GAMES = [
   {
     key: 'daily',
-    label: 'DAILY CHALLENGE',
+    label: 'GET STARTED',
     desc: '',
     accent: '#71A88A',
     path: '/play/daily',
@@ -111,7 +111,7 @@ export default function HubPage() {
             >
               <div>
                 <div style={{
-                  fontSize: 12,
+                  fontSize: 18,
                   fontWeight: 800,
                   letterSpacing: '0.14em',
                   color: g.accent,
