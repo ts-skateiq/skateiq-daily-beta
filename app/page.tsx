@@ -99,7 +99,8 @@ export default function HubPage() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
+                position: 'relative',
                 background: 'var(--surface)',
                 borderRadius: 14,
                 padding: '20px 24px',
@@ -109,19 +110,19 @@ export default function HubPage() {
                 border: `1px solid ${g.accent}`,
               }}
             >
-              <div>
+              <div style={{ textAlign: 'center' }}>
                 <div style={{
                   fontSize: 18,
                   fontWeight: 800,
                   letterSpacing: '0.14em',
                   color: g.accent,
-                  marginBottom: 5,
                 }}>
                   {g.label}
                 </div>
-                <div style={{ fontSize: 14, color: 'var(--text)' }}>{g.desc}</div>
               </div>
               <div style={{
+                position: 'absolute',
+                right: 24,
                 fontSize: 36,
                 color: status === 'won' ? g.accent : status === 'lost' ? '#CB8D82' : '#4a4a4a',
                 fontWeight: 600,
