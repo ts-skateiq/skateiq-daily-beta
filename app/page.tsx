@@ -102,7 +102,7 @@ export default function HubPage() {
                 justifyContent: 'center',
                 position: 'relative',
                 background: 'var(--surface)',
-                borderRadius: 14,
+                borderRadius: 999,
                 padding: '20px 24px',
                 textDecoration: 'none',
                 opacity: 1,
