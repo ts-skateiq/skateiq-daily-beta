@@ -169,7 +169,7 @@ export default function GameToolbar({
             padding: 24, width: 'min(340px, 90vw)', zIndex: 50,
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: 'var(--text)' }}>HOW TO PLAY</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: '#71A88A' }}>HOW TO PLAY</h2>
               <button onClick={() => setShowHowTo(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4 }}>
                 <X size={18} />
               </button>
