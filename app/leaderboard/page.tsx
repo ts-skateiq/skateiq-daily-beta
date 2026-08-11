@@ -142,20 +142,6 @@ export default function LeaderboardPage() {
                   borderRadius: isMe ? 8 : 0,
                 }}
               >
-                {/* Rank */}
-                <div style={{
-                  width: 52,
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: 'var(--text-muted)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4,
-                  flexShrink: 0,
-                }}>
-                  {ordinal(rank)}
-                </div>
-
                 {/* Username */}
                 <div style={{
                   flex: 1,
