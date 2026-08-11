@@ -63,8 +63,8 @@ export default function HubPage() {
         marginBottom: 20,
         textTransform: 'uppercase',
       }}>
-        <span style={{ color: 'var(--text)' }}>TODAY&rsquo;S </span>
-        <span style={{ color: 'var(--text)' }}>GAMES</span>
+        <span style={{ color: 'var(--text)' }}>DAILY </span>
+        <span style={{ color: 'var(--text)' }}>CHALLENGE</span>
       </h1>
 
       {/* Daily quote */}
