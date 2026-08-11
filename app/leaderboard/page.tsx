@@ -142,25 +142,28 @@ export default function LeaderboardPage() {
                   borderRadius: isMe ? 8 : 0,
                 }}
               >
-                {/* Username */}
+                {/* Username + Medal */}
                 <div style={{
                   flex: 1,
-                  fontSize: 15,
-                  fontWeight: isMe ? 700 : 500,
-                  color: isMe ? '#71A88A' : 'var(--text)',
-                  fontFamily: 'monospace',
-                  letterSpacing: '0.01em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
                 }}>
-                  {entry.username}
-                  {isMe && <span style={{ fontSize: 11, fontFamily: 'Inter, sans-serif', marginLeft: 6, color: '#71A88A', fontWeight: 600 }}>you</span>}
-                </div>
-
-                {/* Medal */}
-                <div style={{ fontSize: 22, marginLeft: 8, width: 28, textAlign: 'center' }}>
-                  {medal ?? ''}
+                  <span style={{
+                    fontSize: 15,
+                    fontWeight: isMe ? 700 : 500,
+                    color: isMe ? '#71A88A' : 'var(--text)',
+                    fontFamily: 'monospace',
+                    letterSpacing: '0.01em',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {entry.username}
+                  </span>
+                  {medal && <span style={{ fontSize: 18, lineHeight: 1 }}>{medal}</span>}
+                  {isMe && <span style={{ fontSize: 11, fontFamily: 'Inter, sans-serif', color: '#71A88A', fontWeight: 600 }}>you</span>}
                 </div>
               </div>
             )
