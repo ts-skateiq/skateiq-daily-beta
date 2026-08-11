@@ -35,7 +35,7 @@ async function computeStreak(supabase: Awaited<ReturnType<typeof createClient>>,
 
 export async function POST(req: NextRequest) {
   try {
-    const { makes, total } = await req.json()
+    const { makes, total, dots } = await req.json()
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'unauthenticated' }, { status: 401 })
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
       makes,
       total,
       username,
+      dots: dots ?? '',
       streak: 0,
     }, { onConflict: 'user_id,date' })
 

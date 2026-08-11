@@ -10,15 +10,16 @@ interface Entry {
   total: number
   username: string
   streak: number
+  dots: string
   created_at: string
 }
 
 const MOCK_ENTRIES: Entry[] = [
-  { user_id: 'mock-1', makes: 3, total: 3, username: 'rileyk',   streak: 14, created_at: '' },
-  { user_id: 'mock-2', makes: 3, total: 3, username: 'jakemoss', streak: 7,  created_at: '' },
-  { user_id: 'mock-3', makes: 2, total: 3, username: 'carsonb',  streak: 21, created_at: '' },
-  { user_id: 'mock-4', makes: 2, total: 3, username: 'taylors',  streak: 3,  created_at: '' },
-  { user_id: 'mock-5', makes: 1, total: 3, username: 'devonm',   streak: 5,  created_at: '' },
+  { user_id: 'mock-1', makes: 3, total: 3, username: 'rileyk',   streak: 14, dots: '🟢🟢🟢', created_at: '' },
+  { user_id: 'mock-2', makes: 3, total: 3, username: 'jakemoss', streak: 7,  dots: '🟢🟢🟢', created_at: '' },
+  { user_id: 'mock-3', makes: 2, total: 3, username: 'carsonb',  streak: 21, dots: '🟢🔴🟢', created_at: '' },
+  { user_id: 'mock-4', makes: 2, total: 3, username: 'taylors',  streak: 3,  dots: '🟢🟢🔴', created_at: '' },
+  { user_id: 'mock-5', makes: 1, total: 3, username: 'devonm',   streak: 5,  dots: '🔴🟢🔴', created_at: '' },
 ]
 
 function getMedalEmoji(makes: number, total: number): string | null {
@@ -150,6 +151,7 @@ export default function LeaderboardPage() {
                   alignItems: 'center',
                   gap: 6,
                   overflow: 'hidden',
+                  justifyContent: 'flex-start',
                 }}>
                   <span style={{
                     fontSize: 15,
@@ -166,13 +168,20 @@ export default function LeaderboardPage() {
                   {isMe && <span style={{ fontSize: 11, fontFamily: 'Inter, sans-serif', color: '#71A88A', fontWeight: 600 }}>you</span>}
                 </div>
 
+                {/* Dots */}
+                <div style={{ flex: 1, textAlign: 'center', fontSize: 13, letterSpacing: '1px', flexShrink: 0 }}>
+                  {entry.dots}
+                </div>
+
                 {/* Streak */}
-                {entry.streak > 0 && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0 }}>
-                    <span style={{ fontSize: 14 }}>🔥</span>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)' }}>{entry.streak}</span>
-                  </div>
-                )}
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 3 }}>
+                  {entry.streak > 0 && (
+                    <>
+                      <span style={{ fontSize: 14 }}>🔥</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)' }}>{entry.streak}</span>
+                    </>
+                  )}
+                </div>
               </div>
             )
           })
