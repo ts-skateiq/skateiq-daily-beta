@@ -48,11 +48,7 @@ export default function DailyLanding() {
         <span style={{ color: 'var(--text)' }}>CHALLENGE</span>
       </h1>
 
-      <p style={{ fontSize: 15, color: MUTED, lineHeight: 1.5, margin: 0 }}>
-        3 tricks. Make or bail.
-      </p>
-
-      <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+<div style={{ display: 'flex', gap: 10, width: '100%' }}>
         <Link
           href="/subscribe"
           style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: `1.5px solid ${ACCENT}`, color: ACCENT, fontWeight: 600, fontSize: 14, padding: '12px 8px', borderRadius: 999, textDecoration: 'none' }}
