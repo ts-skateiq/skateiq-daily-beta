@@ -10,7 +10,7 @@ const GAMES = [
   {
     key: 'daily',
     label: 'DAILY CHALLENGE',
-    desc: '3 tricks. Make or bail.',
+    desc: '',
     accent: '#71A88A',
     path: '/play/daily',
   },
