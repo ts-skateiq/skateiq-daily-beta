@@ -31,6 +31,12 @@ export default function GameToolbar({
   const [stats, setStats] = useState<{ streak: number; gold: number; silver: number; bronze: number } | null>(null)
 
   useEffect(() => {
+    if (!howToPlay) return
+    const t = setTimeout(() => setShowHowTo(true), 600)
+    return () => clearTimeout(t)
+  }, [howToPlay])
+
+  useEffect(() => {
     if (!user) return
     fetch('/api/daily-score')
       .then(r => r.json())
@@ -153,6 +159,7 @@ export default function GameToolbar({
                 { href: '/', label: 'Home' },
                 { href: '/play/daily', label: 'Daily Challenge' },
                 { href: '/leaderboard', label: "Today's Leaderboard" },
+                { href: '/how-scoring-works', label: 'How Scoring Works' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -166,7 +173,7 @@ export default function GameToolbar({
               <div style={{ borderTop: '1px solid var(--border)', margin: '8px 0' }} />
               {[
                 { href: '/subscribe', label: 'Subscribe' },
-                { href: 'https://skateiq.com/collections/training-programs', label: 'Shop' },
+                { href: 'https://skateiq.com/collections/training-programs', label: 'Learn' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -185,11 +192,14 @@ export default function GameToolbar({
       {/* How to play modal */}
       {showHowTo && howToPlay && (
         <>
+          <style>{`@keyframes howToIn{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}`}</style>
           <div onClick={() => setShowHowTo(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 40 }} />
           <div style={{
             position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
             background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 16,
             padding: 24, width: 'min(340px, 90vw)', zIndex: 50,
+            boxShadow: '0 0 30px 10px rgba(0,0,0,0.4), 0 15px 40px rgba(0,0,0,0.45)',
+            animation: 'howToIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h2 style={{ margin: 0, fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: '#71A88A' }}>HOW TO PLAY</h2>

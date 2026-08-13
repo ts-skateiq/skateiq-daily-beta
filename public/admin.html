@@ -215,6 +215,20 @@
       align-items: center;
     }
 
+    .category-select {
+      grid-column: 1 / -1;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      appearance: auto;
+    }
+    .category-select:focus { outline: none; border-color: var(--accent); }
+
     .trick-row:last-child { margin-bottom: 0; }
 
     .trick-remove {
@@ -280,41 +294,41 @@
       opacity: 0.4;
     }
 
-    .actions {
-      max-width: 740px;
-      margin: 28px auto 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-save {
-      background: var(--accent);
-      color: #0d0e0d;
-      border: none;
-      border-radius: 8px;
-      padding: 13px 28px;
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.02em;
-      transition: opacity 0.15s;
-    }
-
-    .btn-save:hover { opacity: 0.88; }
-    .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .status {
-      font-size: 13px;
-      font-weight: 500;
+    .autosave-status {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
       opacity: 0;
       transition: opacity 0.2s;
+      pointer-events: none;
+      z-index: 100;
     }
+    .autosave-status.show { opacity: 1; }
+    .autosave-status.err { color: var(--danger); }
 
-    .status.show { opacity: 1; }
-    .status.ok { color: var(--accent); }
-    .status.err { color: var(--danger); }
+    .scroll-top-btn {
+      display: block;
+      margin: 32px auto 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .scroll-top-btn:hover { color: var(--text); border-color: var(--text); }
 
     .tab-bar {
       max-width: 740px;
@@ -450,7 +464,7 @@
     </div>
     <button class="btn-primary" id="login-btn" onclick="login()">Sign In</button>
     <div class="login-error" id="login-error"></div>
-    <a href="https://skateiq-daily-beta-production.up.railway.app" style="display:block;text-align:center;margin-top:20px;font-size:13px;color:var(--muted);text-decoration:none;">← Back to app</a>
+    <a href="/" style="display:block;text-align:center;margin-top:20px;font-size:13px;color:var(--muted);text-decoration:none;">← Back to app</a>
   </div>
 </div>
 
@@ -460,7 +474,7 @@
     <span class="wordmark">SKATE IQ</span>
     <h1>Daily Schedule Admin</h1>
     <div style="display:flex;gap:10px;align-items:center">
-      <a href="https://skateiq-daily-beta-production.up.railway.app" class="btn-logout" style="text-decoration:none">← App</a>
+      <a href="/" class="btn-logout" style="text-decoration:none">← App</a>
       <button class="btn-logout" onclick="logout()">Log out</button>
     </div>
   </header>
@@ -482,20 +496,16 @@
 
   <div class="container" id="schedule-form"></div>
 
-  <div class="actions">
-    <button class="btn-save" id="save-btn" onclick="save()">Save Schedule</button>
-    <span class="status" id="status"></span>
-  </div>
+  <button class="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Scroll to top</button>
   </div>
 
   <div id="panel-quotes" style="display:none">
     <div class="quotes-form" id="quotes-form"></div>
-    <div class="actions">
-      <button class="btn-save" id="save-quotes-btn" onclick="saveQuotes()">Save Quotes</button>
-      <span class="status" id="quotes-status"></span>
-    </div>
+    <button class="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Scroll to top</button>
   </div>
 </div>
+
+<div class="autosave-status" id="autosave-status"></div>
 
 <script>
 let schedule = [];
@@ -568,14 +578,20 @@ function render() {
           <input type="text"
             placeholder="Trick name"
             value="${escHtml(trick.name)}"
-            oninput="schedule[${i}].tricks[${ti}].name = this.value"
+            oninput="schedule[${i}].tricks[${ti}].name = this.value; debouncedSave()"
           >
+          <select onchange="schedule[${i}].tricks[${ti}].category = this.value; debouncedSave()" class="category-select">
+            <option value="" ${!trick.category ? 'selected' : ''}>— Category —</option>
+            <option value="homework" ${trick.category === 'homework' ? 'selected' : ''}>Homework</option>
+            <option value="drill" ${trick.category === 'drill' ? 'selected' : ''}>Drill</option>
+            <option value="trick" ${trick.category === 'trick' ? 'selected' : ''}>Trick</option>
+          </select>
           <div class="url-wrap">
             <span class="url-icon">▶</span>
             <input type="url"
               placeholder="YouTube URL (optional)"
               value="${escHtml(trick.url)}"
-              oninput="schedule[${i}].tricks[${ti}].url = this.value"
+              oninput="schedule[${i}].tricks[${ti}].url = this.value; debouncedSave()"
             >
           </div>
         </div>
@@ -589,12 +605,14 @@ function addTrick(i) {
   if (schedule[i].tricks.length >= 5) return;
   schedule[i].tricks.push({ name: '', url: '' });
   render();
+  debouncedSave();
 }
 
 function removeTrick(i, ti) {
   if (schedule[i].tricks.length <= 1) return;
   schedule[i].tricks.splice(ti, 1);
   render();
+  debouncedSave();
 }
 
 async function login() {
@@ -642,32 +660,34 @@ async function showAdmin() {
   await Promise.all([load(), loadQuotes()]);
 }
 
-async function save() {
-  const btn = document.getElementById('save-btn');
-  const status = document.getElementById('status');
-  btn.disabled = true;
-  status.className = 'status';
+let saveTimer, saveQuotesTimer;
 
+function showAutoStatus(msg, isErr) {
+  const el = document.getElementById('autosave-status');
+  el.textContent = msg;
+  el.className = 'autosave-status show' + (isErr ? ' err' : '');
+  clearTimeout(el._hide);
+  el._hide = setTimeout(() => { el.className = 'autosave-status'; }, 2000);
+}
+
+async function save() {
   try {
     const res = await fetch('/api/schedule', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-token': token || ''
-      },
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token || '' },
       body: JSON.stringify(schedule)
     });
     if (res.status === 401) { logout(); return; }
     if (!res.ok) throw new Error();
-    status.textContent = '✓ Saved';
-    status.className = 'status show ok';
+    showAutoStatus('✓ Saved');
   } catch {
-    status.textContent = 'Save failed — is the server running?';
-    status.className = 'status show err';
-  } finally {
-    btn.disabled = false;
-    setTimeout(() => status.className = 'status', 3000);
+    showAutoStatus('Save failed', true);
   }
+}
+
+function debouncedSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 800);
 }
 
 async function load() {
@@ -698,13 +718,13 @@ function renderQuotes() {
       <input type="text"
         placeholder="Quote text…"
         value="${escHtml(q.text)}"
-        oninput="quotes[${i}].text = this.value"
+        oninput="quotes[${i}].text = this.value; debouncedSaveQuotes()"
         style="font-style:italic"
       >
       <input type="text"
         placeholder="— Author"
         value="${escHtml(q.author)}"
-        oninput="quotes[${i}].author = this.value"
+        oninput="quotes[${i}].author = this.value; debouncedSaveQuotes()"
       >
     </div>
   `).join('');
@@ -722,10 +742,6 @@ async function loadQuotes() {
 }
 
 async function saveQuotes() {
-  const btn = document.getElementById('save-quotes-btn');
-  const status = document.getElementById('quotes-status');
-  btn.disabled = true;
-  status.className = 'status';
   try {
     const res = await fetch('/api/quotes', {
       method: 'POST',
@@ -734,15 +750,15 @@ async function saveQuotes() {
     });
     if (res.status === 401) { logout(); return; }
     if (!res.ok) throw new Error();
-    status.textContent = '✓ Saved';
-    status.className = 'status show ok';
+    showAutoStatus('✓ Saved');
   } catch {
-    status.textContent = 'Save failed';
-    status.className = 'status show err';
-  } finally {
-    btn.disabled = false;
-    setTimeout(() => status.className = 'status', 3000);
+    showAutoStatus('Save failed', true);
   }
+}
+
+function debouncedSaveQuotes() {
+  clearTimeout(saveQuotesTimer);
+  saveQuotesTimer = setTimeout(saveQuotes, 800);
 }
 
 // Enter password with Enter key

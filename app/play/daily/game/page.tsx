@@ -17,10 +17,27 @@ export default function DailyGamePage() {
       <ul style={{ paddingLeft: 18, margin: 0 }}>
         <li style={{ marginBottom: 8 }}><strong>Unlimited attempts.</strong> Try each trick as many times as you like.</li>
         <li style={{ marginBottom: 8 }}><strong>Keep your own score.</strong> This is on the honor system.</li>
-        <li>A new challenge is released daily at midnight UTC.</li>
       </ul>
+      <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+        <h2 style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: '#71A88A' }}>SCORING</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #71A88A', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#71A88A', flexShrink: 0 }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><polyline points="4,12 9,18 20,6"/></svg>
+            </div>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#71A88A' }}>Tried <strong style={{ textDecoration: 'underline' }}>OR</strong> succeeded</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #CB8D82', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#CB8D82', flexShrink: 0 }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" width="16" height="16"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+            </div>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#CB8D82' }}>Tried and failed</span>
+          </div>
+          <p style={{ margin: '12px 0 0', fontSize: 12, fontWeight: 600, color: '#C9A84C', textAlign: 'center', paddingBottom: 16 }}>If you did not participate, don&apos;t click anything.</p>
+        </div>
+      </div>
       {!user && (
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)', textAlign: 'center' }}>
+        <div style={{ marginTop: 0, paddingTop: 16, borderTop: '1px solid var(--border)', textAlign: 'center' }}>
           <p style={{ margin: '0 0 10px', fontSize: 13, color: 'var(--text-muted)' }}>Create an account to track your progress</p>
           <button
             onClick={() => setShowAuth(true)}

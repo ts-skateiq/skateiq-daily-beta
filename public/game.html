@@ -224,7 +224,6 @@
     .btn-pill.outline {
       background: transparent;
       border: 2px solid var(--accent);
-      color: var(--accent);
     }
     .btn-pill.btn-white {
       background: #ffffff;
@@ -373,14 +372,6 @@
     .trick-num.bailed { color: var(--bail); }
 
     .trick-info { flex: 1; }
-    .trick-slot-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #5a5a5a;
-      margin-bottom: 2px;
-    }
     .trick-name {
       font-size: 17px;
       font-weight: 600;
@@ -496,81 +487,42 @@
       padding: 20px 20px 16px;
       border-bottom: 1px solid var(--divider);
     }
-    .results-title {
-      font-family: 'AlumniSans', sans-serif;
-      font-size: 22px;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-
-    .score-hero {
-      padding: 32px 20px 24px;
-      text-align: center;
-      border-bottom: 1px solid var(--divider);
-    }
-    .score-big {
-      font-family: 'AlumniSans', sans-serif;
-      font-size: 80px;
-      line-height: 1;
-      color: var(--text);
-    }
-    .score-label {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-top: 6px;
-    }
-    .score-dots {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .score-dot {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      border: 2px solid var(--divider);
-    }
-    .score-dot.make { background: var(--make); border-color: var(--make); }
-    .score-dot.bail { background: var(--bail); border-color: var(--bail); }
-
-    .results-list { flex: 1; overflow-y: auto; }
-
-    .result-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--divider);
-    }
-    .result-dot { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; }
-    .result-info { flex: 1; }
-    .result-name { font-size: 15px; font-weight: 600; }
-    .result-status { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .result-clip { font-size: 13px; color: var(--accent); text-decoration: none; }
-    .result-clip:hover { text-decoration: underline; }
-
-    .medal-display {
+    .results-body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 0;
-      gap: 12px;
-      min-height: 140px;
-    }
-    .medal-display .medal-note {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
       text-align: center;
+      padding: 40px 24px 32px;
+      gap: 12px;
+      flex: 1;
+    }
+    .results-congrats {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0;
       letter-spacing: 0.01em;
     }
-    .medal-display .medal-emoji {
-      font-size: 96px;
-      line-height: 1;
+    .results-medal-text {
+      font-size: 17px;
+      color: var(--text);
+      margin: 0;
     }
+    .results-emoji {
+      font-size: 80px;
+      line-height: 1;
+      margin: 8px 0;
+    }
+    .results-track {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+    .results-body .btn-pill { width: auto; min-width: 200px; }
+    .score-dots { display: flex; justify-content: center; gap: 10px; }
+    .score-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--divider); }
+    .score-dot.make { background: var(--make); border-color: var(--make); }
+    .score-dot.bail { background: var(--bail); border-color: var(--bail); }
     .results-footer {
       padding: 16px 20px;
       padding-bottom: calc(16px + env(safe-area-inset-bottom));
@@ -713,13 +665,13 @@
     <p class="home-subtitle">Daily skateboarding game to push your limits.</p>
 
     <div id="home-cta" style="width:100%;max-width:320px"></div>
-    <a href="/admin.html" class="admin-link">Admin</a>
+    <a href="/admin.html" class="admin-link" target="_top">Admin</a>
   </div>
 
   <!-- ── Daily Round view ── -->
   <div class="view" id="view-round">
     <div class="round-header">
-      <div class="round-title">Today's Round</div>
+      <div class="round-title">Today's Session</div>
       <div class="round-meta" id="round-meta"></div>
     </div>
     <div class="tricks-list" id="tricks-list"></div>
@@ -733,17 +685,15 @@
     <div class="results-header">
       <button class="back-btn" onclick="showView('round')" style="margin-bottom:8px">← Back</button>
     </div>
-    <div class="score-hero">
-      <div class="score-big" id="score-big">0/3</div>
-      <div class="score-label">Today's Score</div>
+    <div class="results-body">
+      <h2 class="results-congrats">Congratulations!</h2>
+      <p class="results-medal-text" id="results-medal-text"></p>
+      <p class="results-track">Track your progression, daily streak and medal count.</p>
       <div class="score-dots" id="score-dots"></div>
-    </div>
-    <div class="results-list" id="results-list"></div>
-    <div class="medal-display" id="medal-display"></div>
-    <div class="results-footer">
-      <button class="btn-pill btn-share" onclick="copyScore()">Share <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="flex-shrink:0"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-      <button class="btn-pill btn-white" onclick="window.parent.postMessage('open-auth','*')">Create free account</button>
+      <div class="results-emoji" id="results-emoji"></div>
+      <button class="btn-pill btn-white" onclick="window.parent.postMessage('open-auth','*')" style="padding:14px 36px;font-size:15px;min-width:260px">Create free account</button>
       <p style="font-size:15px;color:#f0f0ee;text-align:center;margin:0">Already registered? <button onclick="window.parent.postMessage('open-auth','*')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#f0f0ee;font-weight:600;text-decoration:underline;padding:0">Log in</button></p>
+      <button class="btn-pill btn-share" onclick="copyScore()" style="margin-top:24px">Share <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="flex-shrink:0"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
     </div>
   </div>
 
@@ -752,10 +702,10 @@
 <!-- ── Tutorial Modal ── -->
 <div class="modal-backdrop" id="confirm-submit" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-box" style="max-width:320px;padding:28px 24px;text-align:center;">
-    <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Are you sure?</div>
+    <div style="font-size:34px;margin-bottom:8px;">🚨</div><div style="font-size:16px;font-weight:700;margin-bottom:8px;color:#ffffff;">Are you sure?</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">This cannot be undone.</div>
-    <button class="btn-pill" style="margin-bottom:10px;" onclick="document.getElementById('confirm-submit').classList.remove('open');showView('results')">Yes, final answer</button>
-    <button class="btn-pill outline" onclick="document.getElementById('confirm-submit').classList.remove('open')">Back</button>
+    <button class="btn-pill outline" style="margin-bottom:10px;border-color:#ffffff;color:#ffffff;" onclick="document.getElementById('confirm-submit').classList.remove('open');showView('results')">Yes, final answer</button>
+    <button class="btn-pill outline" style="background:#e53935;color:#ffffff;border-color:#e53935;" onclick="document.getElementById('confirm-submit').classList.remove('open')">Back</button>
   </div>
 </div>
 
@@ -866,9 +816,10 @@ function showView(name) {
     const s = getState();
     if (s.type !== 'pregame' && s.round) {
       const d = loadRoundData(s.round);
-      const makes = s.round.tricks.filter((_, i) => d.picks[i] === 'make').length;
-      const dots = s.round.tricks.map((_, i) => d.picks[i] === 'make' ? '🟢' : d.picks[i] === 'bail' ? '🔴' : '⬜').join('');
-      window.parent.postMessage({ type: 'daily-complete', makes, total: s.round.tricks.length, dots }, '*');
+      const namedR = s.round.tricks.reduce((acc, t, i) => { if (t.name && t.name.trim()) acc.push(i); return acc; }, []);
+      const makes = namedR.filter(i => d.picks[i] === 'make').length;
+      const dots = namedR.map(i => d.picks[i] === 'make' ? '🟢' : d.picks[i] === 'bail' ? '🔴' : '⬜').join('');
+      window.parent.postMessage({ type: 'daily-complete', makes, total: namedR.length, dots }, '*');
     }
   }
   window.scrollTo(0, 0);
@@ -930,7 +881,10 @@ function renderRound() {
   const list = document.getElementById('tricks-list');
   list.innerHTML = '';
 
+  let visibleNum = 0;
   round.tricks.forEach((trick, i) => {
+    if (!trick.name || !trick.name.trim()) return;
+    visibleNum++;
     const pick = data.picks[i]; // 'make', 'bail', or undefined
     const videoUrl = data.videos[i] || '';
 
@@ -939,19 +893,16 @@ function renderRound() {
     row.id = 'trick-row-' + i;
 
     const numClass = pick === 'make' ? 'made' : pick === 'bail' ? 'bailed' : '';
-    const SLOT_LABELS = ['Homework', 'Drill', 'Trick', 'Bonus', 'Challenge'];
-
     row.innerHTML = `
       <div class="trick-main">
-        <div class="trick-num ${numClass}">${i + 1}</div>
+        <div class="trick-num ${numClass}">${visibleNum}</div>
         <div class="trick-info">
-          <div class="trick-slot-label">${SLOT_LABELS[i] ?? ''}</div>
           <div class="trick-name">${escHtml(trick.name)}</div>
-          ${trick.url ? `<button class="tutorial-link" onclick="openTutorial(${i})">Watch tutorial</button>` : ''}
+          ${trick.url ? `<button class="tutorial-link" onclick="openTutorial(${i})">Watch video</button>` : ''}
         </div>
         <div class="trick-controls">
           <button class="btn-circle btn-make ${pick === 'make' ? 'active' : ''}" onclick="setPick(${i},'make')" title="Make"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="4,12 9,18 20,6"/></svg></button>
-          <button class="btn-circle btn-bail ${pick === 'bail' ? 'active' : ''}" onclick="setPick(${i},'bail')" title="Bail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" width="16" height="16"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+          ${trick.category !== 'homework' && trick.category !== 'drill' ? `<button class="btn-circle btn-bail ${pick === 'bail' ? 'active' : ''}" onclick="setPick(${i},'bail')" title="Bail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" width="16" height="16"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>` : ''}
         </div>
       </div>`;
 
@@ -1021,7 +972,7 @@ function setPick(i, pick) {
   const newPick = data.picks[i];
   numEl.className = 'trick-num' + (newPick === 'make' ? ' made' : newPick === 'bail' ? ' bailed' : '');
   makeBtn.classList.toggle('active', newPick === 'make');
-  bailBtn.classList.toggle('active', newPick === 'bail');
+  if (bailBtn) bailBtn.classList.toggle('active', newPick === 'bail');
 }
 
 function updateRoundCountdown(state) {
@@ -1034,7 +985,7 @@ function updateRoundCountdown(state) {
 /* ── Results ── */
 function getMedal(m, t) {
   if (m === t) return 'gold';
-  if (m === 0) return t === 1 ? 'bronze' : null;
+  if (m === 0) return null;
   if (t === 2) return 'silver';
   if (t === 3) return m >= 2 ? 'silver' : 'bronze';
   if (t === 4) return m >= 3 ? 'silver' : 'bronze';
@@ -1048,44 +999,32 @@ function renderResults() {
   const round = state.round;
   const data = loadRoundData(round);
 
-  const total = round.tricks.length;
-  const makes = round.tricks.filter((_, i) => data.picks[i] === 'make').length;
-  document.getElementById('score-big').textContent = makes + '/' + total;
+  const named = round.tricks.reduce((acc, t, i) => { if (t.name && t.name.trim()) acc.push({ trick: t, i }); return acc; }, []);
+  const total = named.length;
+  const makes = named.filter(({ i }) => data.picks[i] === 'make').length;
 
   const medalEmoji = { gold: '🥇', silver: '🥈', bronze: '🥉' };
   const medal = getMedal(makes, total);
-  const medalEl = document.getElementById('medal-display');
-  if (medal) {
-    medalEl.innerHTML = `<span class="medal-note">Nice work! You earned a ${medal} medal!</span><span class="medal-emoji">${medalEmoji[medal]}</span>`;
-  } else if (makes === 0 && total >= 2) {
-    medalEl.innerHTML = `<span class="medal-note">Nice try!</span>`;
-  } else {
-    medalEl.innerHTML = '';
-  }
-
-  // Dots
   const dotsEl = document.getElementById('score-dots');
-  dotsEl.innerHTML = round.tricks.map((_, i) => {
+  dotsEl.innerHTML = named.map(({ i }) => {
     const p = data.picks[i];
     const cls = p === 'make' ? 'make' : p === 'bail' ? 'bail' : '';
     return `<div class="score-dot ${cls}"></div>`;
   }).join('');
 
-  // List
-  const listEl = document.getElementById('results-list');
-  listEl.innerHTML = round.tricks.map((trick, i) => {
-    const p = data.picks[i];
-    const dotColor = p === 'make' ? '#71A88A' : p === 'bail' ? '#CB8D82' : '#3a3a3a';
-    const status = p === 'make' ? 'Make' : p === 'bail' ? 'Bail' : 'Not logged';
-    return `
-      <div class="result-row">
-        <div class="result-dot" style="background:${dotColor}"></div>
-        <div class="result-info">
-          <div class="result-name">${escHtml(trick.name)}</div>
-          <div class="result-status">${status}</div>
-        </div>
-      </div>`;
-  }).join('');
+  const medalTextEl = document.getElementById('results-medal-text');
+  const medalEmojiEl = document.getElementById('results-emoji');
+  if (medal) {
+    medalTextEl.textContent = `You got a ${medal} medal.`;
+    medalEmojiEl.textContent = medalEmoji[medal];
+  } else if (makes === 0 && total >= 2) {
+    medalTextEl.textContent = 'Nice try! Keep skating.';
+    medalEmojiEl.textContent = '🛹';
+  } else {
+    medalTextEl.textContent = `${makes}/${total} tricks landed.`;
+    medalEmojiEl.textContent = '🛹';
+  }
+
 }
 
 function copyScore() {
@@ -1094,9 +1033,10 @@ function copyScore() {
   const round = state.round;
   const data = loadRoundData(round);
 
-  const dots = round.tricks.map((_, i) => data.picks[i] === 'make' ? '🟢' : data.picks[i] === 'bail' ? '🔴' : '⬜').join('');
-  const makes = round.tricks.filter((_, i) => data.picks[i] === 'make').length;
-  const total = round.tricks.length;
+  const namedC = round.tricks.reduce((acc, t, i) => { if (t.name && t.name.trim()) acc.push(i); return acc; }, []);
+  const dots = namedC.map(i => data.picks[i] === 'make' ? '🟢' : data.picks[i] === 'bail' ? '🔴' : '⬜').join('');
+  const makes = namedC.filter(i => data.picks[i] === 'make').length;
+  const total = namedC.length;
   const medal = getMedal(makes, total);
   const medalEmoji = { gold: '🥇', silver: '🥈', bronze: '🥉' };
   const medalStr = medal ? ` ${medalEmoji[medal]}` : '';

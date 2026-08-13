@@ -115,7 +115,11 @@ export default function HubPage() {
                 position: 'relative',
                 background: 'var(--surface)',
                 borderRadius: 999,
-                padding: '20px 24px',
+                width: 320,
+                height: 50.5,
+                boxSizing: 'border-box',
+                padding: 0,
+                margin: '0 auto',
                 textDecoration: 'none',
                 opacity: 1,
                 transition: 'opacity 0.15s',
@@ -135,9 +139,12 @@ export default function HubPage() {
               <div style={{
                 position: 'absolute',
                 right: 24,
-                fontSize: 36,
-                color: status === 'won' ? g.accent : status === 'lost' ? '#CB8D82' : '#4a4a4a',
+                top: '50%',
+                transform: 'translateY(-60%)',
+                fontSize: 45,
+                color: status === 'won' ? g.accent : status === 'lost' ? '#CB8D82' : '#71A88A',
                 fontWeight: 600,
+                lineHeight: 1,
               }}>
                 {status === 'won' ? '✓' : status === 'lost' ? '✗' : '›'}
               </div>
@@ -199,7 +206,7 @@ export default function HubPage() {
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
 
       <a
-        href="https://daily-skate-challenge-beta-production.up.railway.app/admin.html"
+        href="/admin.html"
         style={{
           marginTop: 48,
           fontSize: 12,

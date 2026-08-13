@@ -98,6 +98,7 @@ export default function TopBar() {
                 { href: '/', label: 'Home' },
                 { href: '/play/daily', label: 'Daily Challenge' },
                 { href: '/leaderboard', label: "Today's Leaderboard" },
+                { href: '/how-scoring-works', label: 'How Scoring Works' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -111,7 +112,7 @@ export default function TopBar() {
               <div style={{ borderTop: '1px solid var(--border)', margin: '8px 0' }} />
               {[
                 { href: '/subscribe', label: 'Subscribe' },
-                { href: 'https://skateiq.com/collections/training-programs', label: 'Shop' },
+                { href: 'https://skateiq.com/collections/training-programs', label: 'Learn' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
