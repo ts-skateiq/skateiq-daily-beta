@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth-context'
 import AuthModal from './AuthModal'
 import { X } from 'lucide-react'
 
-const GAME_ROUTES = ['/play/wordle/game', '/play/connections/game', '/play/daily/game']
+const GAME_ROUTES = ['/play/wordle/game', '/play/connections/game', '/play/daily/game', '/stats']
 
 export default function TopBar() {
   const pathname = usePathname()
@@ -98,7 +98,7 @@ export default function TopBar() {
                 { href: '/', label: 'Home' },
                 { href: '/play/daily', label: 'Daily Challenge' },
                 { href: '/leaderboard', label: "Today's Leaderboard" },
-                { href: '/how-scoring-works', label: 'How Scoring Works' },
+                { href: '/stats', label: 'Stats' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -113,6 +113,7 @@ export default function TopBar() {
               {[
                 { href: '/subscribe', label: 'Subscribe' },
                 { href: 'https://skateiq.com/collections/training-programs', label: 'Learn' },
+                { href: 'https://www.skool.com/skateiq/about', label: 'Community' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}

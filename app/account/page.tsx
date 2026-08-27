@@ -36,7 +36,7 @@ function AccountContent() {
 
   return (
     <div className="flex flex-col items-center px-4 py-8 max-w-md mx-auto w-full">
-      <h1 className="text-2xl font-black mb-6">Account</h1>
+      <h1 style={{ fontFamily: 'var(--font-alumni), sans-serif', fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.1, marginBottom: 24, color: 'var(--text)' }}>Account</h1>
 
       <div className="w-full rounded-2xl p-5 mb-4" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
         <div className="text-xs font-semibold tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>EMAIL</div>

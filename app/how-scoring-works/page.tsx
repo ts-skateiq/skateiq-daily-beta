@@ -51,8 +51,8 @@ export default function HowScoringWorksPage() {
       padding: '0 0 60px',
     }}>
       <div style={{ padding: '32px 24px 0', maxWidth: 480, margin: '0 auto' }}>
-        <h1 style={{ fontSize: 28, fontWeight: 800, margin: '0 0 8px', color: '#fff' }}>
-          How scoring works
+        <h1 style={{ fontFamily: 'var(--font-alumni), sans-serif', fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.1, margin: '0 0 8px', color: 'var(--text)' }}>
+          How Scoring Works
         </h1>
         <p style={{ fontSize: 14, color: '#777', margin: '0 0 32px', lineHeight: 1.6 }}>
           Each day has a set of tricks. Land them to earn a medal. The medal you earn depends on how many you land out of the total.

@@ -8,7 +8,7 @@ import IframeResizer from '@/components/IframeResizer'
 
 const alumniSans = Alumni_Sans({
   subsets: ['latin'],
-  weight: ['700'],
+  weight: ['700', '900'],
   variable: '--font-alumni',
 })
 

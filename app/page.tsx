@@ -113,7 +113,7 @@ export default function HubPage() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 position: 'relative',
-                background: 'var(--surface)',
+                background: g.accent,
                 borderRadius: 999,
                 width: 320,
                 height: 50.5,
@@ -131,7 +131,7 @@ export default function HubPage() {
                   fontSize: 18,
                   fontWeight: 800,
                   letterSpacing: '0.14em',
-                  color: g.accent,
+                  color: '#ffffff',
                 }}>
                   {g.label}
                 </div>
@@ -142,7 +142,7 @@ export default function HubPage() {
                 top: '50%',
                 transform: 'translateY(-60%)',
                 fontSize: 45,
-                color: status === 'won' ? g.accent : status === 'lost' ? '#CB8D82' : '#71A88A',
+                color: status === 'won' ? '#ffffff' : status === 'lost' ? '#ffffff' : '#ffffff',
                 fontWeight: 600,
                 lineHeight: 1,
               }}>
@@ -168,7 +168,7 @@ export default function HubPage() {
       )}
 
       {!user && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginTop: 36, width: '100%', maxWidth: 360 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginTop: 16, width: '100%', maxWidth: 360 }}>
           <button
             onClick={() => setShowAuth(true)}
             style={{

@@ -15,11 +15,11 @@ interface Entry {
 }
 
 const MOCK_ENTRIES: Entry[] = [
-  { user_id: 'mock-1', makes: 3, total: 3, username: 'rileyk',   streak: 14, dots: '🟢🟢🟢', created_at: '' },
-  { user_id: 'mock-2', makes: 3, total: 3, username: 'jakemoss', streak: 7,  dots: '🟢🟢🟢', created_at: '' },
-  { user_id: 'mock-3', makes: 2, total: 3, username: 'carsonb',  streak: 21, dots: '🟢🔴🟢', created_at: '' },
-  { user_id: 'mock-4', makes: 2, total: 3, username: 'taylors',  streak: 3,  dots: '🟢🟢🔴', created_at: '' },
-  { user_id: 'mock-5', makes: 1, total: 3, username: 'devonm',   streak: 5,  dots: '🔴🟢🔴', created_at: '' },
+  { user_id: 'mock-1', makes: 1, total: 1, username: 'rileyk',   streak: 14, dots: '🟢', created_at: '' },
+  { user_id: 'mock-2', makes: 1, total: 1, username: 'jakemoss', streak: 7,  dots: '🟢', created_at: '' },
+  { user_id: 'mock-3', makes: 1, total: 1, username: 'carsonb',  streak: 21, dots: '🟢', created_at: '' },
+  { user_id: 'mock-4', makes: 0, total: 1, username: 'taylors',  streak: 3,  dots: '🔴', created_at: '' },
+  { user_id: 'mock-5', makes: 0, total: 1, username: 'devonm',   streak: 5,  dots: '🔴', created_at: '' },
 ]
 
 function getMedalEmoji(makes: number, total: number): string | null {
@@ -75,11 +75,18 @@ export default function LeaderboardPage() {
       padding: '0 0 48px',
       fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
     }}>
+      {/* Page heading */}
+      <div style={{ width: '100%', maxWidth: 480, padding: '20px 20px 0' }}>
+        <div style={{ fontFamily: 'var(--font-alumni), sans-serif', fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.1, color: 'var(--text)' }}>
+          Leaderboard
+        </div>
+      </div>
+
       {/* Header */}
       <div style={{
         width: '100%',
         maxWidth: 480,
-        padding: '24px 20px 16px',
+        padding: '16px 20px 16px',
         textAlign: 'center',
         position: 'sticky',
         top: 0,
@@ -150,13 +157,12 @@ export default function LeaderboardPage() {
                   }}>
                     {entry.username}
                   </span>
-                  {medal && <span style={{ fontSize: 18, lineHeight: 1 }}>{medal}</span>}
                   {isMe && <span style={{ fontSize: 11, fontFamily: 'Inter, sans-serif', color: '#71A88A', fontWeight: 600 }}>you</span>}
                 </div>
 
-                {/* Dots */}
-                <div style={{ flex: 1, textAlign: 'center', fontSize: 13, letterSpacing: '1px', flexShrink: 0 }}>
-                  {entry.dots}
+                {/* Status */}
+                <div style={{ flex: 1, textAlign: 'center', fontSize: 12, fontWeight: 600, flexShrink: 0, color: entry.makes > 0 ? '#71A88A' : '#CB8D82' }}>
+                  {entry.makes > 0 ? '✅ Completed' : '❌ Incomplete'}
                 </div>
 
                 {/* Streak */}

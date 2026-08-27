@@ -28,11 +28,16 @@ export default function GameToolbar({
   const [menuOpen, setMenuOpen] = useState(false)
   const [showHowTo, setShowHowTo] = useState(false)
   const [showStats, setShowStats] = useState(false)
-  const [stats, setStats] = useState<{ streak: number; gold: number; silver: number; bronze: number } | null>(null)
+  const [stats, setStats] = useState<{ streak: number; weeklyStreak: number } | null>(null)
 
   useEffect(() => {
     if (!howToPlay) return
-    const t = setTimeout(() => setShowHowTo(true), 600)
+    const seen = localStorage.getItem('skateiq_howtoplay_seen')
+    if (seen) return
+    const t = setTimeout(() => {
+      setShowHowTo(true)
+      localStorage.setItem('skateiq_howtoplay_seen', '1')
+    }, 600)
     return () => clearTimeout(t)
   }, [howToPlay])
 
@@ -40,8 +45,8 @@ export default function GameToolbar({
     if (!user) return
     fetch('/api/daily-score')
       .then(r => r.json())
-      .then(d => setStats({ streak: d.streak ?? 0, gold: d.gold ?? 0, silver: d.silver ?? 0, bronze: d.bronze ?? 0 }))
-      .catch(() => setStats({ streak: 0, gold: 0, silver: 0, bronze: 0 }))
+      .then(d => setStats({ streak: d.streak ?? 0, weeklyStreak: d.weeklyStreak ?? 0 }))
+      .catch(() => setStats({ streak: 0, weeklyStreak: 0 }))
   }, [user])
 
   const iconBtn: React.CSSProperties = {
@@ -159,7 +164,7 @@ export default function GameToolbar({
                 { href: '/', label: 'Home' },
                 { href: '/play/daily', label: 'Daily Challenge' },
                 { href: '/leaderboard', label: "Today's Leaderboard" },
-                { href: '/how-scoring-works', label: 'How Scoring Works' },
+                { href: '/stats', label: 'Stats' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -174,6 +179,7 @@ export default function GameToolbar({
               {[
                 { href: '/subscribe', label: 'Subscribe' },
                 { href: 'https://skateiq.com/collections/training-programs', label: 'Learn' },
+                { href: 'https://www.skool.com/skateiq/about', label: 'Community' },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -240,22 +246,16 @@ export default function GameToolbar({
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <div style={{ textAlign: 'center', marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', letterSpacing: '0.08em', marginBottom: 4 }}>CURRENT STREAK</div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ flex: 1, textAlign: 'center' }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 6, textTransform: 'uppercase' }}>Daily Streak</div>
                   <div style={{ fontSize: 32, fontWeight: 700, color: '#4A8FD9' }}>🔥{stats?.streak ?? 0}</div>
                 </div>
-                <div style={{ borderTop: '1px solid var(--border)', marginBottom: 16 }} />
-                {[
-                  { emoji: '🥇', value: stats?.gold ?? 0, color: '#C9A84C' },
-                  { emoji: '🥈', value: stats?.silver ?? 0, color: '#A0A9B8' },
-                  { emoji: '🥉', value: stats?.bronze ?? 0, color: '#A0694A' },
-                ].map(({ emoji, value, color }) => (
-                  <div key={emoji} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-                    <span style={{ fontSize: 22 }}>{emoji}</span>
-                    <span style={{ fontSize: 24, fontWeight: 700, color, minWidth: 32 }}>{value}</span>
-                  </div>
-                ))}
+                <div style={{ width: 1, background: 'var(--border)' }} />
+                <div style={{ flex: 1, textAlign: 'center' }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 6, textTransform: 'uppercase' }}>Weekly Streak</div>
+                  <div style={{ fontSize: 32, fontWeight: 700, color: '#4A8FD9' }}>🔥{stats?.weeklyStreak ?? 0}</div>
+                </div>
               </div>
             )}
           </div>

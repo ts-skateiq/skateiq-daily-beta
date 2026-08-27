@@ -1,6 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+function getMondayKey(d: Date): string {
+  const dow = d.getUTCDay()
+  const diff = dow === 0 ? -6 : 1 - dow
+  const mon = new Date(d)
+  mon.setUTCDate(d.getUTCDate() + diff)
+  return mon.toISOString().split('T')[0]
+}
+
+async function computeWeeklyStreak(supabase: Awaited<ReturnType<typeof createClient>>, userId: string): Promise<number> {
+  const { data } = await supabase
+    .from('daily_scores')
+    .select('date')
+    .eq('user_id', userId)
+
+  if (!data || data.length === 0) return 0
+
+  const weekCounts = new Map<string, number>()
+  for (const row of data) {
+    const key = getMondayKey(new Date(row.date + 'T00:00:00Z'))
+    weekCounts.set(key, (weekCounts.get(key) ?? 0) + 1)
+  }
+
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+  let weekStart = new Date(today)
+  weekStart.setUTCDate(today.getUTCDate() + (today.getUTCDay() === 0 ? -6 : 1 - today.getUTCDay()))
+
+  let streak = 0
+  let first = true
+  for (let i = 0; i < 500; i++) {
+    const key = weekStart.toISOString().split('T')[0]
+    const count = weekCounts.get(key) ?? 0
+    if (count >= 3) {
+      streak++
+    } else if (first) {
+      // current week in progress, skip to previous
+    } else {
+      break
+    }
+    first = false
+    weekStart = new Date(weekStart)
+    weekStart.setUTCDate(weekStart.getUTCDate() - 7)
+  }
+
+  return streak
+}
+
 async function computeStreak(supabase: Awaited<ReturnType<typeof createClient>>, userId: string): Promise<number> {
   const { data } = await supabase
     .from('daily_scores')
@@ -97,8 +144,9 @@ export async function GET() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ streak: 0, gold: 0, silver: 0, bronze: 0 })
 
-    const [streak, { data: scores }] = await Promise.all([
+    const [streak, weeklyStreak, { data: scores }] = await Promise.all([
       computeStreak(supabase, user.id),
+      computeWeeklyStreak(supabase, user.id),
       supabase.from('daily_scores').select('makes, total').eq('user_id', user.id),
     ])
 
@@ -110,7 +158,7 @@ export async function GET() {
       else if (m === 'bronze') bronze++
     }
 
-    return NextResponse.json({ streak, gold, silver, bronze })
+    return NextResponse.json({ streak, weeklyStreak, gold, silver, bronze })
   } catch {
     return NextResponse.json({ streak: 0, gold: 0, silver: 0, bronze: 0 })
   }

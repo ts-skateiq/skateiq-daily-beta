@@ -32,7 +32,7 @@ export default function ArchivePage() {
 
   return (
     <div className="flex flex-col items-center px-4 py-8 max-w-md mx-auto w-full">
-      <h1 className="text-2xl font-black mb-6">Archive</h1>
+      <h1 style={{ fontFamily: 'var(--font-alumni), sans-serif', fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.1, marginBottom: 24, color: 'var(--text)' }}>Archive</h1>
       <div className="w-full flex flex-col gap-2">
         {days.map(date => (
           <div key={date} className="flex gap-2">

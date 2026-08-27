@@ -15,8 +15,9 @@ export default function DailyGamePage() {
   const howToPlay = (
     <div style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.6 }}>
       <ul style={{ paddingLeft: 18, margin: 0 }}>
-        <li style={{ marginBottom: 8 }}><strong>Unlimited attempts.</strong> Try each trick as many times as you like.</li>
+        <li style={{ marginBottom: 8 }}><strong>Set a timer.</strong> Perform the prescribed drill for 10 minutes.</li>
         <li style={{ marginBottom: 8 }}><strong>Keep your own score.</strong> This is on the honor system.</li>
+        <li style={{ marginBottom: 8 }}><strong>Don't cheat.</strong> You're only cheating yourself.</li>
       </ul>
       <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
         <h2 style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: '#71A88A' }}>SCORING</h2>
@@ -25,16 +26,24 @@ export default function DailyGamePage() {
             <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #71A88A', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#71A88A', flexShrink: 0 }}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><polyline points="4,12 9,18 20,6"/></svg>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#71A88A' }}>Tried <strong style={{ textDecoration: 'underline' }}>OR</strong> succeeded</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#71A88A' }}>Completed</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #CB8D82', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#CB8D82', flexShrink: 0 }}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" width="16" height="16"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#CB8D82' }}>Tried and failed</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#CB8D82' }}>Incomplete</span>
           </div>
-          <p style={{ margin: '12px 0 0', fontSize: 12, fontWeight: 600, color: '#C9A84C', textAlign: 'center', paddingBottom: 16 }}>If you did not participate, don&apos;t click anything.</p>
         </div>
+        <div style={{ paddingBottom: 16 }} />
+      </div>
+      <div style={{ marginTop: 0, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+        <h2 style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 800, letterSpacing: '0.08em', color: '#71A88A' }}>STREAKS</h2>
+        <ul style={{ paddingLeft: 18, margin: 0, fontSize: 13, color: 'var(--text)', lineHeight: 1.6 }}>
+          <li style={{ marginBottom: 8 }}><strong>Daily streak.</strong> Complete the drill every day to keep it going.</li>
+          <li><strong>Weekly streak.</strong> Complete at least 3 days in a week to count that week.</li>
+        </ul>
+        <div style={{ paddingBottom: 16 }} />
       </div>
       {!user && (
         <div style={{ marginTop: 0, paddingTop: 16, borderTop: '1px solid var(--border)', textAlign: 'center' }}>
