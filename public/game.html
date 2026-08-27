@@ -1077,8 +1077,10 @@ function renderResults() {
   const data = loadRoundData(round);
 
   const named = round.tricks.reduce((acc, t, i) => { if (t.name && t.name.trim()) acc.push({ trick: t, i }); return acc; }, []);
-  const total = named.length;
-  const makes = named.filter(({ i }) => data.picks[i] === 'make').length;
+  const total = named.length || 1;
+  const makes = named.length
+    ? named.filter(({ i }) => data.picks[i] === 'make').length
+    : (data.picks[0] === 'make' ? 1 : 0);
 
   const medalEmoji = { gold: '🥇', silver: '🥈', bronze: '🥉' };
   const medal = getMedal(makes, total);
