@@ -769,11 +769,13 @@
       <button class="back-btn" onclick="showView('round')" style="margin-bottom:8px">← Back</button>
     </div>
     <div class="results-body">
-      <h2 class="results-congrats">Congratulations!</h2>
-      <p class="results-medal-text" id="results-medal-text"></p>
-      <p class="results-track">Track your progression, daily streak and medal count.</p>
-      <div class="score-dots" id="score-dots"></div>
+      <h2 class="results-congrats" id="results-congrats">Completed!</h2>
       <div class="results-emoji" id="results-emoji"></div>
+      <div class="results-streak" id="results-streak" style="display:none;flex-direction:column;align-items:center;gap:4px;margin:4px 0">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Daily Streak</div>
+        <div id="results-streak-num" style="font-size:40px;font-weight:900;color:#4A8FD9;line-height:1">🔥0</div>
+      </div>
+      <div class="score-dots" id="score-dots"></div>
       <button class="btn-pill btn-white" onclick="window.parent.postMessage('open-auth','*')" style="padding:14px 36px;font-size:15px;min-width:260px">Create free account</button>
       <p style="font-size:15px;color:#f0f0ee;text-align:center;margin:0">Already registered? <button onclick="window.parent.postMessage('open-auth','*')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#f0f0ee;font-weight:600;text-decoration:underline;padding:0">Log in</button></p>
       <button class="btn-pill btn-share" onclick="copyScore()" style="margin-top:24px">Share <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="flex-shrink:0"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
@@ -1087,18 +1089,16 @@ function renderResults() {
     return `<div class="score-dot ${cls}"></div>`;
   }).join('');
 
-  const medalTextEl = document.getElementById('results-medal-text');
-  const medalEmojiEl = document.getElementById('results-emoji');
-  if (medal) {
-    medalTextEl.textContent = `You got a ${medal} medal.`;
-    medalEmojiEl.textContent = medalEmoji[medal];
-  } else if (makes === 0 && total >= 2) {
-    medalTextEl.textContent = 'Nice try! Keep skating.';
-    medalEmojiEl.textContent = '🛹';
+  const congratsEl = document.getElementById('results-congrats');
+  const emojiEl = document.getElementById('results-emoji');
+  if (makes > 0) {
+    congratsEl.textContent = 'Completed!';
+    emojiEl.textContent = '✅';
   } else {
-    medalTextEl.textContent = `${makes}/${total} tricks landed.`;
-    medalEmojiEl.textContent = '🛹';
+    congratsEl.textContent = 'Incomplete';
+    emojiEl.textContent = '❌';
   }
+  emojiEl.style.fontSize = '56px';
 
 }
 
@@ -1202,6 +1202,17 @@ async function init() {
   showView(startView);
 }
 init();
+
+window.addEventListener('message', function(e) {
+  if (e.data?.type === 'streak-update') {
+    const streakEl = document.getElementById('results-streak');
+    const streakNumEl = document.getElementById('results-streak-num');
+    if (streakEl && streakNumEl) {
+      streakNumEl.textContent = '🔥' + e.data.streak;
+      streakEl.style.display = 'flex';
+    }
+  }
+});
 </script>
 </body>
 </html>

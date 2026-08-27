@@ -84,7 +84,13 @@ export default function DailyGamePage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ makes: e.data.makes, total: e.data.total }),
-        }).catch(() => {})
+        })
+          .then(r => r.json())
+          .then(d => {
+            const iframe = document.querySelector('iframe')
+            iframe?.contentWindow?.postMessage({ type: 'streak-update', streak: d.streak ?? 0 }, '*')
+          })
+          .catch(() => {})
       }
     }
     window.addEventListener('message', handler)
