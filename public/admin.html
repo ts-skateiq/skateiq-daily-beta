@@ -270,6 +270,47 @@
     .btn-add-trick:hover { border-color: var(--accent); color: var(--accent); }
     .btn-add-trick:disabled { opacity: 0.3; cursor: not-allowed; }
 
+    .btn-add-note {
+      background: none;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 16px;
+      width: 100%;
+      margin-top: 10px;
+      transition: border-color 0.15s, color 0.15s;
+      text-align: left;
+    }
+    .btn-add-note:hover { border-color: var(--accent); color: var(--accent); }
+    .drill-note {
+      width: 100%;
+      margin-top: 10px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 10px 14px;
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+    .drill-note:focus { outline: none; border-color: var(--accent); }
+    .note-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 10px;
+      display: block;
+    }
+
     .trick-num {
       font-size: 11px;
       font-weight: 600;
@@ -564,41 +605,48 @@ function render() {
     .map((day, i) => ({ day, i }))
     .filter(({ day }) => day.start.slice(0, 7) === selectedMonth);
 
-  el.innerHTML = days.map(({ day, i }) => `
+  el.innerHTML = days.map(({ day, i }) => {
+    const trick = day.tricks[0] || { name: '', url: '', note: '' };
+    const hasNote = trick.note && trick.note.length > 0;
+    return `
     <div class="week-card">
       <div class="week-header">
         <span class="week-date">${fmtDate(day.start)}</span>
       </div>
-      ${day.tricks.map((trick, ti) => `
-        <div class="trick-header">
-          <span class="trick-num" style="margin:0">Trick ${ti + 1}</span>
-          ${day.tricks.length > 1 ? `<button class="trick-remove" onclick="removeTrick(${i},${ti})" title="Remove">✕</button>` : ''}
-        </div>
-        <div class="trick-row">
-          <input type="text"
-            placeholder="Trick name"
-            value="${escHtml(trick.name)}"
-            oninput="schedule[${i}].tricks[${ti}].name = this.value; debouncedSave()"
+      <div class="trick-row">
+        <input type="text"
+          placeholder="Drill name"
+          value="${escHtml(trick.name)}"
+          oninput="schedule[${i}].tricks[0].name = this.value; debouncedSave()"
+        >
+        <div class="url-wrap">
+          <span class="url-icon">▶</span>
+          <input type="url"
+            placeholder="YouTube URL (optional)"
+            value="${escHtml(trick.url)}"
+            oninput="schedule[${i}].tricks[0].url = this.value; debouncedSave()"
           >
-          <select onchange="schedule[${i}].tricks[${ti}].category = this.value; debouncedSave()" class="category-select">
-            <option value="" ${!trick.category ? 'selected' : ''}>— Category —</option>
-            <option value="homework" ${trick.category === 'homework' ? 'selected' : ''}>Homework</option>
-            <option value="drill" ${trick.category === 'drill' ? 'selected' : ''}>Drill</option>
-            <option value="trick" ${trick.category === 'trick' ? 'selected' : ''}>Trick</option>
-          </select>
-          <div class="url-wrap">
-            <span class="url-icon">▶</span>
-            <input type="url"
-              placeholder="YouTube URL (optional)"
-              value="${escHtml(trick.url)}"
-              oninput="schedule[${i}].tricks[${ti}].url = this.value; debouncedSave()"
-            >
-          </div>
         </div>
-      `).join('')}
-      <button class="btn-add-trick" onclick="addTrick(${i})" ${day.tricks.length >= 5 ? 'disabled' : ''}>+ Add trick</button>
-    </div>
-  `).join('');
+      </div>
+      ${hasNote ? `
+        <span class="note-label">Note</span>
+        <textarea class="drill-note"
+          placeholder="Add a note for this drill…"
+          oninput="schedule[${i}].tricks[0].note = this.value; debouncedSave()"
+        >${escHtml(trick.note)}</textarea>
+      ` : `
+        <button class="btn-add-note" onclick="addNote(${i})">+ Add note</button>
+      `}
+    </div>`;
+  }).join('');
+}
+
+function addNote(i) {
+  if (!schedule[i].tricks[0]) schedule[i].tricks[0] = { name: '', url: '', note: '' };
+  schedule[i].tricks[0].note = ' ';
+  render();
+  const textarea = document.querySelectorAll('.drill-note')[document.querySelectorAll('.drill-note').length - 1];
+  if (textarea) { textarea.value = ''; textarea.focus(); }
 }
 
 function addTrick(i) {

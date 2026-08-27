@@ -1,0 +1,262 @@
+<title>Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --black:      #161616;
+    --surface:    #1E1E1E;
+    --white:      #F1F1F1;
+    --dim:        #777;
+    --mid:        #AAAAAA;
+    --border:     rgba(241,241,241,0.07);
+    --heading: 'League Gothic', 'Arial Narrow', sans-serif;
+    --body:    'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    min-height: 100vh;
+    font-family: var(--body);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 48px;
+  }
+
+  /* ── Typography ── */
+  .screen-heading {
+    font-family: var(--heading);
+    font-size: 52px; line-height: 0.95;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 20px 24px 4px;
+  }
+  .section-label {
+    font-size: 10px; letter-spacing: 2.5px;
+    color: var(--dim); text-transform: uppercase;
+    font-weight: 500;
+    padding: 0 24px;
+    margin-top: 20px; margin-bottom: 10px;
+  }
+
+  /* ── Schedule strip ── */
+  .schedule-strip { display: flex; gap: 5px; padding: 0 24px; }
+  .sched-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .sched-day-label { font-size: 10px; color: var(--dim); font-weight: 500; letter-spacing: 0.5px; }
+  .sched-pill {
+    width: 100%; height: 38px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 700; letter-spacing: 0.8px;
+    cursor: pointer;
+    background: var(--surface); color: var(--mid);
+  }
+  .sched-pill.active { background: rgba(241,241,241,0.12); color: var(--white); }
+  .sched-pill.today  { box-shadow: 0 0 0 1.5px var(--white); }
+
+  /* ── Calendar grid ── */
+  .cal-wrap { padding: 0 24px; }
+  .cal-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .cal-month { font-family: var(--heading); font-size: 22px; color: var(--white); letter-spacing: 1px; }
+  .cal-nav-btn {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--dim); font-size: 16px; cursor: pointer;
+    border-radius: 3px; border: 1px solid var(--border);
+  }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+  .cal-header-cell {
+    text-align: center; font-size: 10px;
+    color: var(--dim); font-weight: 500;
+    padding: 4px 0 6px; letter-spacing: 0.5px;
+  }
+  .cal-cell {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--dim);
+    border-radius: 3px; cursor: pointer;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal-cell.empty  { pointer-events: none; }
+  .cal-cell.active { background: rgba(241,241,241,0.1); color: var(--white); font-weight: 600; }
+  .cal-cell.rest   { color: rgba(241,241,241,0.2); }
+  .cal-cell.today  { box-shadow: 0 0 0 1.5px var(--white); color: var(--white); }
+  .cal-cell.done::after {
+    content: '';
+    position: absolute; bottom: 3px; left: 50%;
+    transform: translateX(-50%);
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--white);
+  }
+  .cal-cell.done { position: relative; }
+
+  /* ── Stat cards ── */
+  .stat-cards { display: flex; flex-direction: column; gap: 8px; padding: 0 24px; }
+  .stat-card {
+    background: var(--surface);
+    border-radius: 3px;
+    border-left: 3px solid var(--white);
+    padding: 12px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer;
+  }
+  .pillar-eyebrow {
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 500; color: var(--mid); margin-bottom: 2px;
+  }
+  .hobby-name { font-family: var(--heading); font-size: 20px; color: var(--white); letter-spacing: 0.3px; }
+  .mini-bar-wrap {
+    height: 2px; background: rgba(241,241,241,0.08);
+    border-radius: 1px; margin-top: 6px; overflow: hidden;
+  }
+  .mini-bar-fill { height: 100%; border-radius: 1px; background: var(--white); }
+  .streak-line { font-size: 11px; color: var(--mid); margin-top: 3px; }
+  .streak-note { font-size: 10px; color: var(--dim); margin-top: 2px; }
+  .pct { font-family: var(--heading); font-size: 28px; line-height: 1; color: var(--white); letter-spacing: 0.5px; }
+  .pct-label { font-size: 10px; color: var(--dim); margin-top: 2px; }
+
+  /* ── Habit tracker ── */
+  .habit-grid { padding: 0 24px; }
+  .habit-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .habit-name { font-size: 14px; color: var(--white); flex: 1; }
+  .habit-dots { display: flex; gap: 3px; }
+  .habit-dot { width: 10px; height: 10px; border-radius: 2px; background: rgba(241,241,241,0.07); }
+  .habit-dot.done  { background: rgba(241,241,241,0.55); }
+  .habit-dot.today { box-shadow: 0 0 0 1px var(--white); }
+  .habit-streak { font-size: 11px; color: var(--mid); min-width: 28px; text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+</style>
+
+<div class="screen-heading">CALENDAR</div>
+
+<!-- Schedule strip -->
+<div class="section-label">SCHEDULE</div>
+<div class="schedule-strip">
+  <div class="sched-day"><div class="sched-day-label">M</div><div class="sched-pill active">MON</div></div>
+  <div class="sched-day"><div class="sched-day-label">T</div><div class="sched-pill active">TUE</div></div>
+  <div class="sched-day"><div class="sched-day-label">W</div><div class="sched-pill">REST</div></div>
+  <div class="sched-day"><div class="sched-day-label">T</div><div class="sched-pill active">THU</div></div>
+  <div class="sched-day"><div class="sched-day-label">F</div><div class="sched-pill active">FRI</div></div>
+  <div class="sched-day"><div class="sched-day-label">S</div><div class="sched-pill active today">SAT</div></div>
+  <div class="sched-day"><div class="sched-day-label">S</div><div class="sched-pill">REST</div></div>
+</div>
+
+<!-- Month grid -->
+<div class="section-label" style="margin-top:24px;">PILLARS</div>
+<div class="cal-wrap">
+  <div class="cal-nav">
+    <div class="cal-nav-btn">‹</div>
+    <div class="cal-month">MAY 2026</div>
+    <div class="cal-nav-btn">›</div>
+  </div>
+  <div class="cal-grid">
+    <div class="cal-header-cell">S</div><div class="cal-header-cell">M</div><div class="cal-header-cell">T</div>
+    <div class="cal-header-cell">W</div><div class="cal-header-cell">T</div><div class="cal-header-cell">F</div>
+    <div class="cal-header-cell">S</div>
+
+    <div class="cal-cell empty"></div><div class="cal-cell empty"></div><div class="cal-cell empty"></div>
+    <div class="cal-cell empty"></div>
+    <div class="cal-cell active done">1</div>
+    <div class="cal-cell active done">2</div>
+    <div class="cal-cell rest">3</div>
+
+    <div class="cal-cell active done">4</div><div class="cal-cell active done">5</div>
+    <div class="cal-cell rest">6</div>
+    <div class="cal-cell active done">7</div><div class="cal-cell active done">8</div>
+    <div class="cal-cell active done">9</div>
+    <div class="cal-cell rest">10</div>
+
+    <div class="cal-cell active done">11</div><div class="cal-cell active done">12</div>
+    <div class="cal-cell rest">13</div>
+    <div class="cal-cell active done">14</div><div class="cal-cell active done">15</div>
+    <div class="cal-cell active done">16</div>
+    <div class="cal-cell rest">17</div>
+
+    <div class="cal-cell active done">18</div><div class="cal-cell active done">19</div>
+    <div class="cal-cell rest">20</div>
+    <div class="cal-cell active done">21</div><div class="cal-cell active done">22</div>
+    <div class="cal-cell active done">23</div>
+    <div class="cal-cell rest">24</div>
+
+    <div class="cal-cell active done">25</div><div class="cal-cell active done">26</div>
+    <div class="cal-cell rest">27</div>
+    <div class="cal-cell active done">28</div>
+    <div class="cal-cell active today done">29</div>
+    <div class="cal-cell active">30</div>
+    <div class="cal-cell rest">31</div>
+  </div>
+</div>
+
+<!-- Stat cards -->
+<div class="section-label" style="margin-top:20px;"></div>
+<div class="stat-cards">
+  <div class="stat-card">
+    <div style="flex:1;">
+      <div class="pillar-eyebrow">Category 1</div>
+      <div class="hobby-name">Goal Name</div>
+      <div class="mini-bar-wrap"><div class="mini-bar-fill" style="width:76%;"></div></div>
+      <div class="streak-line">▲ 14 day streak</div>
+      <div class="streak-note">Streak is earned daily.</div>
+    </div>
+    <div style="margin-left:16px; text-align:right;">
+      <div class="pct">76%</div>
+      <div class="pct-label">completion</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div style="flex:1;">
+      <div class="pillar-eyebrow">Category 2</div>
+      <div class="hobby-name">Goal Name</div>
+      <div class="mini-bar-wrap"><div class="mini-bar-fill" style="width:100%;"></div></div>
+      <div class="streak-line">▲ 7 day streak</div>
+      <div class="streak-note">Streak is earned daily.</div>
+    </div>
+    <div style="margin-left:16px; text-align:right;">
+      <div class="pct">100%</div>
+      <div class="pct-label">completion</div>
+    </div>
+  </div>
+</div>
+
+<!-- Daily habits -->
+<div class="section-label" style="margin-top:24px;">DAILY HABITS</div>
+<div class="habit-grid">
+  <div class="habit-row">
+    <div class="habit-name">Habit one</div>
+    <div class="habit-dots">
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot today done"></div>
+    </div>
+    <div class="habit-streak">▲ 7</div>
+  </div>
+  <div class="habit-row">
+    <div class="habit-name">Habit two</div>
+    <div class="habit-dots">
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot done"></div><div class="habit-dot"></div>
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot today"></div>
+    </div>
+    <div class="habit-streak">▲ 4</div>
+  </div>
+  <div class="habit-row">
+    <div class="habit-name">Habit three</div>
+    <div class="habit-dots">
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot done"></div><div class="habit-dot done"></div>
+      <div class="habit-dot today done"></div>
+    </div>
+    <div class="habit-streak">▲ 12</div>
+  </div>
+</div>

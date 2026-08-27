@@ -20,9 +20,10 @@
     "start": "2026-08-01",
     "tricks": [
       {
-        "name": "",
-        "url": "",
-        "category": "homework"
+        "name": "Drill NAME TEST",
+        "url": "https://youtu.be/gByJOU_m428",
+        "category": "homework",
+        "note": "Note test"
       },
       {
         "name": "",
@@ -436,8 +437,9 @@
     "start": "2026-08-24",
     "tricks": [
       {
-        "name": "",
-        "url": ""
+        "name": "DRILL Test",
+        "url": "https://youtu.be/gByJOU_m428",
+        "note": "Note test"
       },
       {
         "name": "",
@@ -470,8 +472,9 @@
     "start": "2026-08-26",
     "tricks": [
       {
-        "name": "",
-        "url": ""
+        "name": "Monster Walks",
+        "url": "https://youtu.be/mt5VKRyzoc4",
+        "note": "Notes test \nNote 2 \nNote 3"
       },
       {
         "name": "",

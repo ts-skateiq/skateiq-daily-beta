@@ -478,6 +478,75 @@
       border-top: 1px solid var(--divider);
     }
 
+    /* ── Drill view ── */
+    .drill-name {
+      font-size: 20px;
+      font-weight: 900;
+      text-align: center;
+      padding: 20px 20px 12px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .drill-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 20px 12px;
+    }
+    .drill-video-wrap {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+    .drill-video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .drill-note-wrap {
+      padding: 16px 20px 0;
+    }
+    .drill-note-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .drill-note {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .drill-actions {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+    }
+    .drill-btn {
+      flex: 1;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 0;
+    }
+    .drill-btn-make {
+      background: rgba(113, 168, 138, 0.12);
+      border-color: var(--make);
+      color: var(--make);
+    }
+    .drill-btn-make.active { background: var(--make); color: #fff; }
+    .drill-btn-bail {
+      background: rgba(203, 141, 130, 0.12);
+      border-color: var(--bail);
+      color: var(--bail);
+    }
+    .drill-btn-bail.active { background: var(--bail); color: #fff; }
+
     /* ── Results Summary view ── */
     #view-results {
       padding: 0;
@@ -671,11 +740,25 @@
   <!-- ── Daily Round view ── -->
   <div class="view" id="view-round">
     <div class="round-header">
-      <div class="round-title">Today's Session</div>
+      <div class="round-title">Today's Drill</div>
       <div class="round-meta" id="round-meta"></div>
     </div>
-    <div class="tricks-list" id="tricks-list"></div>
-    <div style="padding: 16px 20px;">
+    <div class="drill-name" id="drill-name"></div>
+    <div class="drill-subtitle">Perform this drill for 10 minutes.</div>
+    <div class="drill-video-wrap" id="drill-video-wrap"></div>
+    <div class="drill-note-wrap" id="drill-note-wrap" style="display:none">
+      <div class="drill-note-label">KEY TAKEAWAYS</div>
+      <div class="drill-note" id="drill-note"></div>
+    </div>
+    <div class="drill-actions">
+      <button class="drill-btn drill-btn-make" id="drill-btn-make" onclick="setDrillPick('make')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><polyline points="4,12 9,18 20,6"/></svg>
+      </button>
+      <button class="drill-btn drill-btn-bail" id="drill-btn-bail" onclick="setDrillPick('bail')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" width="36" height="36"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      </button>
+    </div>
+    <div style="padding: 0 20px 16px;">
       <button class="btn-pill" onclick="document.getElementById('confirm-submit').classList.add('open')">Submit</button>
     </div>
   </div>
@@ -867,47 +950,49 @@ function renderRound() {
   const round = state.round;
   const data = loadRoundData(round);
 
-  // Meta
   const start = parseLocalDate(round.start);
-  document.getElementById('round-meta').textContent =
-    fmtDate(start);
+  document.getElementById('round-meta').textContent = fmtDate(start);
 
-  // Countdown
   updateRoundCountdown(state);
 
-  const countEl = document.getElementById('how-to-count');
-  if (countEl) countEl.textContent = `${round.tricks.length} skill${round.tricks.length !== 1 ? 's' : ''} or trick${round.tricks.length !== 1 ? 's' : ''}. Same for everyone, no matter your level.`;
+  const trick = round.tricks[0];
+  document.getElementById('drill-name').textContent = trick ? (trick.name || '') : '';
 
-  const list = document.getElementById('tricks-list');
-  list.innerHTML = '';
+  const videoWrap = document.getElementById('drill-video-wrap');
+  if (trick && trick.url) {
+    const ytMatch = trick.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if (ytMatch) {
+      videoWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytMatch[1]}" allow="encrypted-media" allowfullscreen></iframe>`;
+    } else {
+      videoWrap.innerHTML = '';
+    }
+  } else {
+    videoWrap.innerHTML = '';
+  }
 
-  let visibleNum = 0;
-  round.tricks.forEach((trick, i) => {
-    if (!trick.name || !trick.name.trim()) return;
-    visibleNum++;
-    const pick = data.picks[i]; // 'make', 'bail', or undefined
-    const videoUrl = data.videos[i] || '';
+  const noteText = (trick && trick.note && trick.note.trim()) ? trick.note.trim() : '';
+  document.getElementById('drill-note').textContent = noteText;
+  document.getElementById('drill-note-wrap').style.display = noteText ? 'block' : 'none';
 
-    const row = document.createElement('div');
-    row.className = 'trick-row';
-    row.id = 'trick-row-' + i;
+  updateDrillButtons(data.picks[0]);
+}
 
-    const numClass = pick === 'make' ? 'made' : pick === 'bail' ? 'bailed' : '';
-    row.innerHTML = `
-      <div class="trick-main">
-        <div class="trick-num ${numClass}">${visibleNum}</div>
-        <div class="trick-info">
-          <div class="trick-name">${escHtml(trick.name)}</div>
-          ${trick.url ? `<button class="tutorial-link" onclick="openTutorial(${i})">Watch video</button>` : ''}
-        </div>
-        <div class="trick-controls">
-          <button class="btn-circle btn-make ${pick === 'make' ? 'active' : ''}" onclick="setPick(${i},'make')" title="Make"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="4,12 9,18 20,6"/></svg></button>
-          ${trick.category !== 'homework' && trick.category !== 'drill' ? `<button class="btn-circle btn-bail ${pick === 'bail' ? 'active' : ''}" onclick="setPick(${i},'bail')" title="Bail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" width="16" height="16"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>` : ''}
-        </div>
-      </div>`;
+function setDrillPick(pick) {
+  const state = getState();
+  if (!state.round) return;
+  const data = loadRoundData(state.round);
+  if (data.picks[0] === pick) {
+    delete data.picks[0];
+  } else {
+    data.picks[0] = pick;
+  }
+  saveRoundData(state.round, data);
+  updateDrillButtons(data.picks[0]);
+}
 
-    list.appendChild(row);
-  });
+function updateDrillButtons(pick) {
+  document.getElementById('drill-btn-make').classList.toggle('active', pick === 'make');
+  document.getElementById('drill-btn-bail').classList.toggle('active', pick === 'bail');
 }
 
 function renderVideoSection(i, videoUrl) {
@@ -963,16 +1048,6 @@ function setPick(i, pick) {
     data.picks[i] = pick;
   }
   saveRoundData(state.round, data);
-
-  // Update UI
-  const numEl = document.querySelector(`#trick-row-${i} .trick-num`);
-  const makeBtn = document.querySelector(`#trick-row-${i} .btn-make`);
-  const bailBtn = document.querySelector(`#trick-row-${i} .btn-bail`);
-
-  const newPick = data.picks[i];
-  numEl.className = 'trick-num' + (newPick === 'make' ? ' made' : newPick === 'bail' ? ' bailed' : '');
-  makeBtn.classList.toggle('active', newPick === 'make');
-  if (bailBtn) bailBtn.classList.toggle('active', newPick === 'bail');
 }
 
 function updateRoundCountdown(state) {
@@ -1033,15 +1108,12 @@ function copyScore() {
   const round = state.round;
   const data = loadRoundData(round);
 
-  const namedC = round.tricks.reduce((acc, t, i) => { if (t.name && t.name.trim()) acc.push(i); return acc; }, []);
-  const dots = namedC.map(i => data.picks[i] === 'make' ? '🟢' : data.picks[i] === 'bail' ? '🔴' : '⬜').join('');
-  const makes = namedC.filter(i => data.picks[i] === 'make').length;
-  const total = namedC.length;
-  const medal = getMedal(makes, total);
-  const medalEmoji = { gold: '🥇', silver: '🥈', bronze: '🥉' };
-  const medalStr = medal ? ` ${medalEmoji[medal]}` : '';
+  const trick = round.tricks[0];
+  const drillName = trick ? (trick.name || 'Daily Drill') : 'Daily Drill';
+  const pick = data.picks[0];
+  const result = pick === 'make' ? '✅ Completed' : pick === 'bail' ? '❌ Incomplete' : '⬜ Not submitted';
 
-  const text = `Skate IQ -${medalStr}\n${makes}/${total} ${dots}\nhttps://skateiq-daily-beta-production.up.railway.app`;
+  const text = `Skate IQ — ${drillName}\n${result}\nhttps://skateiq-daily-beta-production.up.railway.app`;
 
   navigator.clipboard.writeText(text).then(() => {
     showToast('Copied to clipboard!');
